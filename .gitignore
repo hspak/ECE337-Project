@@ -5,6 +5,7 @@
 *.mr
 *.pvl
 *.syn
+transcript
 ./analyzed/*
 ./mapped/*
 ./mapped_work/*
