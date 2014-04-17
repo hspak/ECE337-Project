@@ -2,3 +2,12 @@
 *.wlf
 *.mcomp
 *.scomp
+*.mr
+*.pvl
+*.syn
+./analyzed/*
+./mapped/*
+./mapped_work/*
+./reports/*
+
+
