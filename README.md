@@ -11,3 +11,9 @@ else:
     git remote add orgin https://<github username>@github.com/hspak/ece337-project.git
 
 You don't need to worry for your local machines.
+
+## Regular workflow
+    git pull -u origin master
+    git add .
+    git commit -m "message"
+    git push -u origin master
