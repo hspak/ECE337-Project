@@ -2,12 +2,15 @@
 *.wlf
 *.mcomp
 *.scomp
+*.stran
+*.mtran
 *.mr
 *.pvl
 *.syn
+*.nfs*
 transcript
 work
-_work
+*_work
 ./work/*
 ./analyzed/*
 ./mapped/*
