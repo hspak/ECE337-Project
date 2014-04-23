@@ -6,9 +6,9 @@
 *.pvl
 *.syn
 transcript
+_work
+./work/*
 ./analyzed/*
 ./mapped/*
 ./mapped_work/*
 ./reports/*
-
-

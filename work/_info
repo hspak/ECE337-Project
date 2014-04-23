@@ -2,4 +2,25 @@ m255
 K3
 13
 cModel Technology
-d/home/ecegrid/a/mg112/ece337/ece337-project
+Z0 d/home/ecegrid/a/mg112/ece337/ece337-project
+vflex_buffer
+DXx6 sv_std 3 std 0 22 F[19LRNL:5;XmIFh[XOPn1
+!i10b 1
+!s100 <M=VCT82><SI]EVCBPBL<3
+If;Z=57M25:gOS^UN88eLf1
+VIcKLdCNZnBmcFi5jMVk9e3
+!s105 flex_buffer_sv_unit
+S1
+Z1 d/home/ecegrid/a/mg112/ece337/ece337-project
+w1398288915
+8source/flex_buffer.sv
+Fsource/flex_buffer.sv
+L0 8
+Z2 OL;L;10.1b;51
+r1
+!s85 0
+31
+!s108 1398288917.584196
+!s107 source/flex_buffer.sv|
+!s90 -reportprogress|300|source/flex_buffer.sv|
+tCoverage 63 CoverExcludeDefault 1 CoverOpt 1 CoverFEC 0 CoverShortCircuit 0
