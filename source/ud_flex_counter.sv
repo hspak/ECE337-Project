@@ -15,9 +15,9 @@ module ud_flex_counter
   input wire clear,
   input wire up_count_enable,
   input wire down_count_enable,
-  //input wire [NUM_CNT_BITS-1:0] rollover_val,
+  input wire [NUM_CNT_BITS-1:0] rollover_val,
   output wire [NUM_CNT_BITS-1:0] count_out
-  //output wire rollover_flag
+  output wire rollover_flag
   );
   reg [NUM_CNT_BITS:0] current;
   reg [NUM_CNT_BITS:0] next;
@@ -39,10 +39,10 @@ module ud_flex_counter
   begin
     if (up_count_enable)
       begin
-        /*if(current[NUM_CNT_BITS-1:0] == (rollover_val-1))
+        if(current[NUM_CNT_BITS-1:0] == (rollover_val-1))
           begin
             next = {1'b1,rollover_val};
-          end*/
+          end
         //else
           //begin
             if(current[NUM_CNT_BITS] == 1'b1)
@@ -57,12 +57,12 @@ module ud_flex_counter
       end
     else if (down_count_enable)
       begin
-        /*if(current[NUM_CNT_BITS-1:0] == (rollover_val-1))
+        if(current[NUM_CNT_BITS-1:0] == (rollover_val-1))
           begin
             next = {1'b1,rollover_val};
           end
         else
-          begin*/
+          begin
             if(current[NUM_CNT_BITS] == 1'b1)
               begin
                 next = {{(NUM_CNT_BITS){1'b0}},1'b1};
@@ -84,5 +84,5 @@ module ud_flex_counter
   end
   
   assign count_out = current[NUM_CNT_BITS-1:0];
-  //assign rollover_flag = current[NUM_CNT_BITS];
+  assign rollover_flag = current[NUM_CNT_BITS];
 endmodule

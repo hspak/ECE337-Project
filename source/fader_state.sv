@@ -8,9 +8,9 @@
 module fader_state (
     input wire clk,
     input wire n_reset,
-    input wire clear;
-    input wire fad_enable;
-    output wire [21:0] countVal;
+    input wire clear,
+    input wire fad_enable,
+    output reg [21:0] countVal
 );
 
   typedef enum bit [3:0] {
@@ -21,7 +21,8 @@ module fader_state (
   
   reg upCnt=1'b0;
   reg dnCnt=1'b0;
-  reg [21:0] countVal = 21'b101011000100010100001;
+  reg roll_flag;
+  //reg [21:0] countVal = 21'b101011000100010100001;
   
 ud_flex_counter #(.NUM_CNT_BITS(21)) DUT(
   .clk(clk),
@@ -29,7 +30,9 @@ ud_flex_counter #(.NUM_CNT_BITS(21)) DUT(
   .clear(clear),
   .up_count_enable(upCnt),
   .down_count_enable(dnCnt),
-  .count_out(countVal)
+  .rollover_val(21'b111111111111111111111),
+  .count_out(countVal),
+  .rollover_flag(roll_flag)
   );
   
   stateType state;
@@ -76,7 +79,7 @@ always_comb
            
       countUp:
       begin
-        if(countVal=21'b101011000100010100001)
+        if(countVal == 21'b101011000100010100001)
           begin
             nxt_state = idle;
           end
