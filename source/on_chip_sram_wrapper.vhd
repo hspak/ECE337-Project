@@ -22,7 +22,7 @@ entity on_chip_sram_wrapper is
 
 		W_ADDR_SIZE_BITS  : natural := 16;    -- Address bus size in bits/pins with addresses corresponding to 
 																					-- the starting word of the accesss
-		W_WORD_SIZE_BYTES : natural := 1;   	-- Word size of the memory in bytes
+		W_WORD_SIZE_BYTES : natural := 2;   	-- Word size of the memory in bytes
 		W_DATA_SIZE_WORDS : natural := 1;   	-- Data bus size in "words"
 		W_READ_DELAY      : time    := 5 ns; 	-- Delay/latency per read access (total time between start of supplying address and when the data read from memory appears on the r_data port)
 																					-- Keep the 5 ns delay for 0.5u on-chip SRAM

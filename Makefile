@@ -30,7 +30,7 @@ TEST_BENCH	:= tb_$(TOP_LEVEL_FILE)
 # other than the actual design files)( do not include the 'source/')
 # If you are not using one of the sram models simply remove the correspoinding
 # filename from this variable
-# TB_HELPER_FILES	:= off_chip_sram_wrapper.vhd on_chip_sram_wrapper.vhd
+TB_HELPER_FILES	:= on_chip_sram_wrapper.vhd
 
 # Get the top level design and test_bench module names
 TB_MODULE		:= $(notdir $(basename $(TEST_BENCH)))
