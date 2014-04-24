@@ -21,7 +21,7 @@ reg [2:0] icout;
 
 assign icout[0] = g[0] | (p[0] & cin);
 assign icout[1] = g[1] | (g[0] & p[1]) | (cin & p[0] & p[1]);
-assign icout[2] = g[2] | (g[1] & p[2]) | (g[0] & p[1] & p[2] & p[3]) | (cin & p[0] & p[1] & p[2]);
+assign icout[2] = g[2] | (g[1] & p[2]) | (g[0] & p[1] & p[2]) | (cin & p[0] & p[1] & p[2]);
 
 cla_4bit A1(a[3:0], b[3:0], cin, , p[0], g[0], sum[3:0]);
 cla_4bit A2(a[7:4], b[7:4], icout[0], , p[1], g[1], sum[7:4]);
