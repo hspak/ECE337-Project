@@ -11,7 +11,7 @@ module i2s_rcvr_shift_reg(
   wire input n_rst,
   wire input shift,
   wire input data_in,
-  wire output data_out);
+  wire output [32:0] data_out);
   
   flex_stp_sr SHIFT_REGISTER # (NUM_BITS = 32) (.clk(clk),
                                                 .n_rst(n_rst),

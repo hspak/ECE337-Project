@@ -1,15 +1,14 @@
 // $Id: $
-// File name:   i2s_rcvr_edge_detector.sv
+// File name:   i2s_trnmtr_edge_detector.sv
 // Created:     4/27/2014
 // Author:      Clarence Beutel
 // Lab Section: 337-04
 // Version:     1.0  Initial Design Entry
-// Description: I2S Receiver Edge Detector
+// Description: I2S Transmitter Edge Detector
 
-module i2s_rcvr_edge_detector(
+module i2s_trnmtr_edge_detector(
   wire input clk,
   wire input n_rst,
-  wire input ws,
   wire output edge_detected);
   
   reg ff_out_1;
@@ -21,7 +20,7 @@ module i2s_rcvr_edge_detector(
       ff_out_1 <= 1'b0;
     end
     else begin
-      ff_out_1 <= ws;
+      ff_out_1 <= clk;
     end
   end
   
