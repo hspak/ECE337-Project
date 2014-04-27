@@ -71,7 +71,7 @@ module ud_flex_counter
               begin
                 next = current - 1;
               end
-          //end
+          end
       end
     else
       begin
