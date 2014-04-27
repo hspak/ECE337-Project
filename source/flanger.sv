@@ -20,7 +20,8 @@ reg [15:0] addr;
 reg [15:0] r_data;
 reg [15:0] r_data_save;
 reg [15:0] w_data;
-reg [31:0] mod_data;
+reg [31:0] sram_data;
+reg [31:0] adder_data;
 
 reg mem_clr;
 reg mem_init;
@@ -42,7 +43,12 @@ on_chip_sram_wrapper DUT(
   .write_data(w_data)
 );
 
-// 16bit counter
+flanger_adder ADD(
+  .flanger_data(input_data),
+  .sram_data(sram_data),
+  .output_data(adder_data)
+);
+
 typedef enum bit [3:0] {setup, idle, enable_read, read_1, read_2, enable_write, write_1, write_2} stateType;
 
 stateType next;
@@ -59,30 +65,24 @@ end
 
 reg [15:0] w_addr;
 reg [15:0] r_addr;
+reg [15:0] w_addr_next;
+reg [15:0] r_addr_next;
 
 always @ (posedge clk, negedge n_rst) begin
-  if (!n_rst) begin
+  if (!n_rst || w_addr == 16'h1b90) begin
     w_addr <= '0;
-  end if (w_en) begin
-    w_addr <= w_addr + 16;
-  end else if (w_addr == 16'h1b90) begin
-    w_addr <= 0;
   end else begin
-    w_addr <= w_addr;
+    w_addr <= w_addr_next;
   end
 end
 always @ (posedge clk, negedge n_rst) begin
-  if (!n_rst) begin
-    r_addr <= 32;
-  end if (r_en) begin
-    r_addr <= r_addr + 16;
-  end else if (r_addr == 16'h1b90) begin
-    r_addr <= 0;
+  if (!n_rst || r_addr == 16'h1b90) begin
+    r_addr <= '0;
   end else begin
-    r_addr <= r_addr;
+    r_addr <= r_addr_next;
   end
 end
-  
+
 // next state
 always_comb begin
   case(curr)
@@ -150,6 +150,9 @@ end
 always_comb begin
   case(curr)
     setup: begin
+      r_addr_next = 0;
+      w_addr_next = 0;
+
       mem_clr = 1'b1;
       mem_init = 1'b0;
       mem_dump = 1'b0;
@@ -159,10 +162,13 @@ always_comb begin
       addr = 16'b0;
       w_data = 16'b0;
       r_data_save = 16'b0;
-      mod_data = 32'b0;
+      sram_data = 32'b0;
     end
 
     idle: begin
+      r_addr_next = 0;
+      w_addr_next = 0;
+
       mem_clr = 1'b0;
       mem_init = 1'b0;
       mem_dump = 1'b0;
@@ -172,10 +178,13 @@ always_comb begin
       addr = 16'b0;
       w_data = 16'b0;
       r_data_save = 16'b0;
-      mod_data = 32'b0;
+      sram_data = 32'b0;
     end
 
     enable_read: begin
+      r_addr_next = r_addr;
+      w_addr_next = w_addr;
+
       mem_clr = 1'b0;
       mem_init = 1'b0;
       mem_dump = 1'b1;
@@ -185,10 +194,13 @@ always_comb begin
       addr = 16'b0;
       w_data = 16'b0;
       r_data_save = 16'b0;
-      mod_data = mod_data;
+      sram_data = sram_data;
     end
 
     read_1: begin
+      r_addr_next = r_addr + 16;
+      w_addr_next = w_addr;
+
       mem_clr = 1'b0;
       mem_init = 1'b0;
       mem_dump = 1'b0;
@@ -198,10 +210,13 @@ always_comb begin
       addr = r_addr;
       w_data = 16'b0;
       r_data_save = r_data;
-      mod_data = mod_data;
+      sram_data = sram_data;
     end
 
     read_2: begin
+      r_addr_next = r_addr + 16;
+      w_addr_next = w_addr;
+
       mem_clr = 1'b0;
       mem_init = 1'b0;
       mem_dump = 1'b0;
@@ -211,10 +226,13 @@ always_comb begin
       addr = r_addr;
       w_data = 16'b0;
       r_data_save = 16'b0;
-      mod_data = {r_data_save, r_data};
+      sram_data = {r_data_save, r_data};
     end
 
     enable_write: begin
+      r_addr_next = r_addr;
+      w_addr_next = w_addr;
+
       mem_clr = 1'b0;
       mem_init = 1'b0;
       mem_dump = 1'b0;
@@ -224,10 +242,13 @@ always_comb begin
       addr = w_addr;
       w_data = 16'b0;
       r_data_save = 16'b0;
-      mod_data = mod_data;
+      sram_data = sram_data;
     end
 
     write_1: begin
+      r_addr_next = r_addr;
+      w_addr_next = w_addr + 16;
+
       mem_clr = 1'b0;
       mem_init = 1'b0;
       mem_dump = 1'b0;
@@ -237,10 +258,13 @@ always_comb begin
       addr = w_addr;
       w_data = 16'hffff;
       r_data_save = 16'b0;
-      mod_data = mod_data;
+      sram_data = sram_data;
     end
 
     write_2: begin
+      r_addr_next = r_addr;
+      w_addr_next = w_addr + 16;
+
       mem_clr = 1'b0;
       mem_init = 1'b0;
       mem_dump = 1'b0;
@@ -250,11 +274,11 @@ always_comb begin
       addr = w_addr;
       w_data = 16'h1111;
       r_data_save = 16'b0;
-      mod_data = mod_data;
+      sram_data = sram_data;
     end
   endcase
 end
 
-assign output_data = (!flanger_en ? input_data : mod_data);
+assign output_data = (!flanger_en ? input_data : adder_data);
 
 endmodule
