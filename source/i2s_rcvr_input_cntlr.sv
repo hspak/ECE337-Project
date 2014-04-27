@@ -10,7 +10,7 @@ module i2s_rcvr_input_cntlr(
   wire input clk,
   wire input n_rst,
   wire input edge_detected,
-  wire output shift_out);
+  wire output shift);
   
   reg clear = 0;
   reg down_count_enable = 0;
@@ -28,9 +28,11 @@ module i2s_rcvr_input_cntlr(
   //shift out registers
   always_comb begin
     if(data_ready) begin
-      shift_out = 1'b1;
+      shift = 1'b0;
     end
     else begin
-      shift_out = 1'b0;
+      shift = 1'b1;
     end
   end
+  
+endmodule
