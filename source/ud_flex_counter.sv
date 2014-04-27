@@ -16,7 +16,7 @@ module ud_flex_counter
   input wire up_count_enable,
   input wire down_count_enable,
   input wire [NUM_CNT_BITS-1:0] rollover_val,
-  output wire [NUM_CNT_BITS-1:0] count_out
+  output wire [NUM_CNT_BITS-1:0] count_out,
   output wire rollover_flag
   );
   reg [NUM_CNT_BITS:0] current;
@@ -71,7 +71,7 @@ module ud_flex_counter
               begin
                 next = current - 1;
               end
-          //end
+          end
       end
     else
       begin
