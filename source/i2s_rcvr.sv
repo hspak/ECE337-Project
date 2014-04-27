@@ -11,7 +11,7 @@ module i2s_rcvr(
   wire input n_rst,
   wire input ws,
   wire input serial_data,
-  wire output parallel_data);
+  wire output [32:0] parallel_data);
   
   reg detected;
   reg shift;
