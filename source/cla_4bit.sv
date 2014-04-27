@@ -27,7 +27,7 @@ module cla_4bit (
   assign carry[3] = g[2] | (p[2] & g[1]) | (p[2] & p[1] & g[0]) | (p[2] & p[1] & p[0] & carry[0]);
 
   assign cout = g[3] | (p[3] & g[2]) | (p[3] & p[2] & g[1]) | (p[3] & p[2] & p[1] & g[0]) | (p[3] & p[2] & p[1] & p[0] & carry[0]);
-  assign sum = p ^ carry;
+  assign sum = (a ^ b) ^ carry;
   assign pg = p[3] & p[2] & p[1] & p[0];
   assign gg = g[3] | (p[3] & g[2]) |(p[3] & p[2] & g[1]) | (p[3] & p[2] & p[1] & g[0]);
 endmodule
