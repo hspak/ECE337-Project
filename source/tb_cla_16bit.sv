@@ -8,24 +8,16 @@
 module tb_cla_16bit;
     // Inputs
     reg [15:0] A;
-    reg [15:0] B;
-    reg Cin;
+    reg [3:0] B;
 
     // Outputs
-    wire [15:0] S;
-    wire Cout;
-    wire PG;
-    wire GG;
+    reg [19:0] product
 
     // Instantiate the Unit Under Test (UUT)
-    cla_16bit DUT(
-    .sum(S), 
-    .cout(Cout), 
-    .pg(PG), 
-    .gg(GG), 
-    .a(A), 
-    .b(B), 
-    .cin(Cin)
+    mult16by4 DUT(
+    .a(A),
+    .b(B),
+    .product(product)
     );
 
     initial begin
@@ -35,12 +27,11 @@ module tb_cla_16bit;
     #100;
         
     // Add stimulus here
-    #10 A=16'b1010101010101010;B=16'b0101010101010101;Cin=1'b0;
-    #10 A=16'b1010101010101011;B=16'b0101010101010100;Cin=1'b0;
-    #10 A=16'b1010101010101010;B=16'b0101010101010100;Cin=1'b1;
-    #10 A=16'b1110000000000000;B=16'b0000111111111111;Cin=1'b0;
-    #10 A=16'b0000000000000001;B=16'b0000000000000001;Cin=1'b0;
-    #10 A=16'b0000000000000001;B=16'b0000000000000001;Cin=1'b1;
+    #10 A=16'b1010101010101010;B=4'b0101;
+    #10 A=16'b1010101010101010;B=4'b0101;
+    #10 A=16'b1010101010101010;B=4'b0101;
+    #10 A=16'b1010101010101010;B=4'b0101;
+
     // #10 A=4'b100;B=4'b0011;Cin=1'b0;
     // #10 A=4'b1101;B=4'b1010;Cin=1'b1;
     // #10 A=4'b1110;B=4'b1001;Cin=1'b0;
@@ -48,6 +39,6 @@ module tb_cla_16bit;
     end 
  
     initial begin
- $monitor("time=",$time,, "A=%b B=%b Cin=%b : Sum=%b Cout=%b PG=%b GG=%b",A,B,Cin,S,Cout,PG,GG);
+ $monitor("time=",$time,, "A=%b B=%b Product=%b",A,B,product);
     end      
 endmodule

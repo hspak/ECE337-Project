@@ -17,3 +17,7 @@ work
 ./mapped/*
 ./mapped_work/*
 ./reports/*
+*~
+*.bak
+*.v
+*.rep

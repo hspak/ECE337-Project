@@ -9,10 +9,10 @@ module cla_16bit (
   input wire [15:0] a,
   input wire [15:0] b,
   input wire cin,
-  output reg cout,
-  output reg pg, // propagate group
-  output reg gg, // generate group 
-  output reg [15:0] sum
+  output wire cout,
+  output wire pg, // propagate group
+  output wire gg, // generate group 
+  output wire [15:0] sum
 );
 
 reg [3:0] p;

@@ -5,6 +5,7 @@
 // Lab Section: 337-04
 // Version:     1.0  Initial Design Entry
 // Description: tb
+`timescale 1ns / 100ps
 module tb_mult16by4;
     // Inputs
     reg [15:0] A;
