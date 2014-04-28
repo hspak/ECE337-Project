@@ -28,8 +28,8 @@ module amp_clip(
   assign outchan=out_neg_flag?clipped_out:inchan;
 
   cla_16bit A1(.a(inchan), .b(~amp_comp_val), .cin(1'b1), .sum(pos_comp_out));
-  cla_16bit A2(.a(inchan), .b(amp_comp_val), .cin(0'b0), .sum(neg_comp_out));
-  cla_16bit A3(.a({1'b00,pos_comp_out[14:1]}), .b(amp_comp_val), .cin(0'b0), .sum(pos_clipped));
-  cla_16bit A4(.a({1'b10,neg_comp_out[14:1]}), .b(~amp_comp_val), .cin(1'b1), .sum(neg_clipped));
+  cla_16bit A2(.a(inchan), .b(amp_comp_val), .cin(1'b0), .sum(neg_comp_out));
+  cla_16bit A3(.a({2'b00,pos_comp_out[14:1]}), .b(amp_comp_val), .cin(1'b0), .sum(pos_clipped));
+  cla_16bit A4(.a({2'b11,neg_comp_out[14:1]}), .b(~amp_comp_val), .cin(1'b1), .sum(neg_clipped));
   
 endmodule
