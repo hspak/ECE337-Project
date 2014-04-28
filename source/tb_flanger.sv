@@ -42,7 +42,7 @@ module tb_flanger();
 
     tb_shift_en = 1'b1;
     tb_flanger_en = 1'b1;
-    tb_input_data = 32'hf0f0f0f0;
+    tb_input_data = 32'h99991111;
 
     @(posedge tb_clk);
     tb_n_rst = 1'b1;
