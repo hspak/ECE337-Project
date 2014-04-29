@@ -11,7 +11,7 @@ module flanger(
   input wire flanger_en,
   input wire shift_en,
   input wire [31:0] input_data,
-  output wire [31:0] output_data
+  output reg [31:0] output_data
 );
 
 reg r_en;
@@ -35,7 +35,7 @@ on_chip_sram_wrapper DUT(
   .mem_dump(mem_dump),
   .start_address(0),
   .last_address(16'h1090),
-  .verbose(1'b1),
+  .verbose(1'b0),
   .read_enable(r_en),
   .write_enable(w_en),
   .address(addr),
@@ -57,7 +57,7 @@ stateType curr;
 // reg
 always @ (posedge clk, negedge n_rst) begin
   if (!n_rst) begin
-    curr <= idle;
+    curr <= setup;
   end else begin
     curr <= next;
   end         
@@ -69,15 +69,20 @@ reg [15:0] w_addr_next;
 reg [15:0] r_addr_next;
 
 always @ (posedge clk, negedge n_rst) begin
-  if (!n_rst || w_addr == 16'h1b90) begin
-    w_addr <= '0;
+  if (!n_rst) begin
+    w_addr <= 16'b0;
+  end else if (w_addr == 16'h6e40) begin
+    w_addr <= 16'b0;
   end else begin
     w_addr <= w_addr_next;
   end
 end
+
 always @ (posedge clk, negedge n_rst) begin
-  if (!n_rst || r_addr == 16'h1b90) begin
-    r_addr <= '0;
+  if (!n_rst) begin
+    r_addr <= 16'b0;
+  end else if (r_addr == 16'h6e40) begin
+    r_addr <= 16'b0;
   end else begin
     r_addr <= r_addr_next;
   end
@@ -87,14 +92,18 @@ end
 always_comb begin
   case(curr)
     setup: begin
-      if (flanger_en && shift_en) begin
+      if (flanger_en) begin
         next = idle;
+      end else begin
+        next = setup;
       end
     end
 
     idle: begin
-      if (flanger_en) begin
+      if (flanger_en && shift_en) begin
         next = enable_read;
+      end else begin
+        next = idle;
       end
     end
 
@@ -167,8 +176,8 @@ end
 always_comb begin
   case(curr)
     setup: begin
-      r_addr_next = 0;
-      w_addr_next = 0;
+      r_addr_next = 16'b0;
+      w_addr_next = 16'b0;
 
       mem_clr = 1'b1;
       mem_init = 1'b0;
@@ -180,11 +189,13 @@ always_comb begin
       w_data = 16'b0;
       r_data_save = 16'b0;
       sram_data = 32'b0;
+      
+      data_done = 1'b0;
     end
 
     idle: begin
-      r_addr_next = 0;
-      w_addr_next = 0;
+      r_addr_next = 16'b0;
+      w_addr_next = 16'b0;
 
       mem_clr = 1'b0;
       mem_init = 1'b0;
@@ -204,7 +215,7 @@ always_comb begin
 
       mem_clr = 1'b0;
       mem_init = 1'b0;
-      mem_dump = 1'b1;
+      mem_dump = 1'b0;
 
       r_en = 1'b0;
       w_en = 1'b0;
@@ -212,6 +223,8 @@ always_comb begin
       w_data = 16'b0;
       r_data_save = 16'b0;
       sram_data = sram_data;
+      
+      data_done = 1'b0;
     end
 
     read_1: begin
@@ -242,8 +255,10 @@ always_comb begin
       w_en = 1'b0;
       addr = r_addr;
       w_data = 16'b0;
-      r_data_save = 16'b0;
+      r_data_save = r_data_save;
       sram_data = sram_data; 
+      
+      data_done = 1'b0;
     end
 
     read_2: begin
@@ -258,7 +273,7 @@ always_comb begin
       w_en = 1'b0;
       addr = r_addr;
       w_data = 16'b0;
-      r_data_save = 16'b0;
+      r_data_save = r_data_save;
       sram_data = {r_data_save, r_data};
     end
 
@@ -276,6 +291,8 @@ always_comb begin
       w_data = input_data[15:0];
       r_data_save = 16'b0;
       sram_data = sram_data;
+      
+      data_done = 1'b0;
     end
 
     write_1: begin
@@ -308,6 +325,8 @@ always_comb begin
       w_data = input_data[31:16];
       r_data_save = 0;
       sram_data = sram_data;
+      
+      data_done = 1'b0;
     end
 
     write_2: begin
@@ -324,6 +343,8 @@ always_comb begin
       w_data = 0;
       r_data_save = 16'b0;
       sram_data = sram_data;
+      
+      data_done = 1'b1;
     end
   endcase
 end

@@ -18,14 +18,14 @@ module flanger_adder(
     .a(flanger_data[15:0]), 
     .b(sram_data[15:0]),
     .sum(lower_sum),
-    .cin(0)
+    .cin(1'b0)
   );
 
   cla_16bit ADD2(
     .a(flanger_data[31:16]), 
     .b(sram_data[31:16]),
     .sum(upper_sum),
-    .cin(0)
+    .cin(1'b0)
   );
 
   assign output_data = {upper_sum, lower_sum};

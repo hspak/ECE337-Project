@@ -7,8 +7,10 @@
 // Description: .
 `timescale 1ns / 10ps
 
+// 1.4112 MHz
+
 module tb_flanger();
-  localparam CLK_PERIOD = 709;
+  localparam CLK_PERIOD = 708;
 
   reg tb_clk;
   reg tb_n_rst;
