@@ -28,17 +28,17 @@ module fader (
   
   mult16by4 P1(
   .a(signal_in[31:16]),
-  .b(mult_val[21:18]),
+  .b(mult_val[20:17]),
   .product(prod1)
   );
   
   mult16by4 P2(
   .a(signal_in[15:0]),
-  .b(mult_val[21:18]),
+  .b(mult_val[20:17]),
   .product(prod2)
   );
 
-assign signal_out[31:16] = prod1[19:4];
-assign signal_out[15:0] = prod2[19:4];
+assign signal_out[31:16] = (fad_enable ? prod1[19:4] : signal_in[31:16]);
+assign signal_out[15:0] = (fad_enable ? prod2[19:4] : signal_in[15:0]);
 
 endmodule
