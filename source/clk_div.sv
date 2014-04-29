@@ -24,7 +24,7 @@ module clk_div(
     end
   end
 
-  always @ (posedge clk, negedge n_rst) begin
+  always_ff @ (posedge clk, negedge n_rst) begin
     if (!n_rst) begin
       clk_div <= '0;
     end else begin
