@@ -71,7 +71,7 @@ reg [15:0] r_addr_next;
 always @ (posedge clk, negedge n_rst) begin
   if (!n_rst) begin
     w_addr <= 16'b0;
-  end else if (w_addr == 16'h6e40) begin
+  end else if (w_addr == 16'h19d0) begin
     w_addr <= 16'b0;
   end else begin
     w_addr <= w_addr_next;
@@ -80,8 +80,8 @@ end
 
 always @ (posedge clk, negedge n_rst) begin
   if (!n_rst) begin
-    r_addr <= 16'b0;
-  end else if (r_addr == 16'h6e40) begin
+    r_addr <= 16'h0010;
+  end else if (r_addr == 16'h19d0) begin
     r_addr <= 16'b0;
   end else begin
     r_addr <= r_addr_next;
@@ -164,11 +164,7 @@ always_comb begin
     end
 
     write_2: begin
-      if (flanger_en) begin
-        next = enable_read;
-      end else begin
-        next = idle;
-      end
+      next = idle;
     end
   endcase
 end
@@ -176,10 +172,10 @@ end
 always_comb begin
   case(curr)
     setup: begin
-      r_addr_next = 16'b0;
+      r_addr_next = 16'h0010; // read starts at 16-bits offset
       w_addr_next = 16'b0;
 
-      mem_clr = 1'b1;
+      mem_clr = 1'b1; // reset all memory to 0
       mem_init = 1'b0;
       mem_dump = 1'b0;
 
@@ -189,13 +185,11 @@ always_comb begin
       w_data = 16'b0;
       r_data_save = 16'b0;
       sram_data = 32'b0;
-      
-      data_done = 1'b0;
     end
 
     idle: begin
-      r_addr_next = 16'b0;
-      w_addr_next = 16'b0;
+      r_addr_next = r_addr;
+      w_addr_next = w_addr;
 
       mem_clr = 1'b0;
       mem_init = 1'b0;
@@ -210,7 +204,7 @@ always_comb begin
     end
 
     enable_read: begin
-      r_addr_next = r_addr + 16;
+      r_addr_next = r_addr;
       w_addr_next = w_addr;
 
       mem_clr = 1'b0;
@@ -223,12 +217,10 @@ always_comb begin
       w_data = 16'b0;
       r_data_save = 16'b0;
       sram_data = sram_data;
-      
-      data_done = 1'b0;
     end
 
     read_1: begin
-      r_addr_next = r_addr;
+      r_addr_next = r_addr + 16;
       w_addr_next = w_addr;
 
       mem_clr = 1'b0;
@@ -244,7 +236,7 @@ always_comb begin
     end
 
     enable_read_2: begin
-      r_addr_next = r_addr + 16;
+      r_addr_next = r_addr;
       w_addr_next = w_addr;
 
       mem_clr = 1'b0;
@@ -257,12 +249,10 @@ always_comb begin
       w_data = 16'b0;
       r_data_save = r_data_save;
       sram_data = sram_data; 
-      
-      data_done = 1'b0;
     end
 
     read_2: begin
-      r_addr_next = r_addr;
+      r_addr_next = r_addr + 16;
       w_addr_next = w_addr;
 
       mem_clr = 1'b0;
@@ -291,8 +281,6 @@ always_comb begin
       w_data = input_data[15:0];
       r_data_save = 16'b0;
       sram_data = sram_data;
-      
-      data_done = 1'b0;
     end
 
     write_1: begin
@@ -325,8 +313,6 @@ always_comb begin
       w_data = input_data[31:16];
       r_data_save = 0;
       sram_data = sram_data;
-      
-      data_done = 1'b0;
     end
 
     write_2: begin
@@ -343,8 +329,6 @@ always_comb begin
       w_data = 0;
       r_data_save = 16'b0;
       sram_data = sram_data;
-      
-      data_done = 1'b1;
     end
   endcase
 end

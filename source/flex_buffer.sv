@@ -13,14 +13,14 @@ module flex_buffer
   input wire clk,
   input wire n_rst,
   input wire [NUM_BITS-1:0] input_data,
-  output reg [NUM_BITS-1:0] output_data,
+  output reg [NUM_BITS-1:0] output_data
 );
 
   always_ff @ (posedge clk, negedge n_rst) begin
     if (!n_rst) begin
-      output_data = '0;
+      output_data <= '0;
     end else begin
-      output_data = input_data;
+      output_data <= input_data;
     end
   end
 endmodule

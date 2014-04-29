@@ -34,6 +34,10 @@ module tb_clk_div();
   end
 
   initial begin
+    // reset
+    tb_n_rst = 1'b0;
+    @(posedge tb_clk);
+
     tb_n_rst = 1'b1;
   end
 endmodule
