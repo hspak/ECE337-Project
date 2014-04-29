@@ -22,3 +22,4 @@ work
 *.bak
 *.v
 *.rep
+Makefile
