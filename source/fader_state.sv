@@ -24,13 +24,13 @@ module fader_state (
   reg roll_flag;
   //reg [21:0] countVal = 21'b101011000100010100001;
   
-ud_flex_counter #(.NUM_CNT_BITS(21)) DUT(
+ud_flex_counter #(.NUM_CNT_BITS(22)) DUT(
   .clk(clk),
   .n_rst(n_reset),
   .clear(clear),
   .up_count_enable(upCnt),
   .down_count_enable(dnCnt),
-  .rollover_val(21'b111111111111111111111),
+  .rollover_val(22'b1111111111111111111111),
   .count_out(countVal),
   .rollover_flag(roll_flag)
   );
@@ -79,7 +79,7 @@ always_comb
            
       countUp:
       begin
-        if(countVal == 21'b101011000100010100001)
+        if(countVal == 21'b111111111111111111111)
           begin
             nxt_state = idle;
           end
