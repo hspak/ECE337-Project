@@ -14,7 +14,9 @@ module fader (
     output wire [31:0] signal_out
 );
   
-  reg [21:0] mult_val;//mult_val is value (out of 1,411,233 or 21'b101011000100010100001) that the signal is being multiplied by
+  reg [21:0] mult_val;//mult_val is value (out of 2,097,151 or 21'b111111111111111111111) that the signal is being multiplied by
+  reg [19:0] prod1;
+  reg [19:0] prod2;
   
   fader_state POOP(
     .clk(clk),
@@ -24,12 +26,19 @@ module fader (
     .countVal(mult_val)
   );
   
-  fader_wrapper POO(
-  (signal_in)
-  (mult_val)
-  (signal_out)
+  mult16by4 P1(
+  .a(signal_in[31:16]),
+  .b(mult_val[21:18]),
+  .product(prod1)
+  );
+  
+  mult16by4 P2(
+  .a(signal_in[15:0]),
+  .b(mult_val[21:18]),
+  .product(prod2)
   );
 
-
+assign signal_out[31:16] = prod1[19:4];
+assign signal_out[15:0] = prod2[19:4];
 
 endmodule

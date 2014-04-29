@@ -26,7 +26,7 @@ module ud_flex_counter
   begin
     if (1'b0 == n_rst)
       begin
-        current <= 21'b101011000100010100001;
+        current <= 21'b111111111111111111111;
       end
     else
       begin
