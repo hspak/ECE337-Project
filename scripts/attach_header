@@ -1,0 +1,13 @@
+#!/bin/env python
+
+import sys
+
+if (len(sys.argv) < 4):
+    print("usage: attach_header <raw file> <header input> <wav output>")
+    sys.exit(1)
+
+with open(sys.argv[3], 'wb') as wav:
+    with open(sys.argv[2], 'rb') as header:
+        wav.write(header.read())
+    with open(sys.argv[1], 'rb') as raw:
+        wav.write(raw.read())

@@ -1,0 +1,13 @@
+#!/bin/env python
+
+import sys
+
+if (len(sys.argv) < 4):
+    print("usage: strip_header <wav file> <raw output> <header output>")
+    sys.exit(1)
+
+with open(sys.argv[1], 'rb') as wav:
+    with open(sys.argv[3], 'wb') as header:
+        header.write(wav.read(44))
+    with open(sys.argv[2], 'wb') as raw:
+        raw.write(wav.read())
