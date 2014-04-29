@@ -86,44 +86,6 @@ module amp_comp(
     cla_16bit A6(.a(~out_abs_val), .b({16{1'b0}}), .cin(1'b1), .sum(neg_sign_out));
 
     assign outchan = reg_4_out[15]?neg_sign_out:out_abs_val;
-/*    
-    wire [15:0] AcmpB;
-    wire [15:0] AcmpC;
-    wire [15:0] AcmpD;
-    wire [15:0] BcmpC;
-    wire [15:0] BcmpD;
-    wire [15:0] CcmpD;
 
-    wire AeqB;
-    wire AeqC;
-    wire AeqD;
-    wire BeqC;
-    wire BeqD;
-    wire CeqD;
-
-    assign AeqB=!(AcmpB||{16{1'b0}});
-    assign AeqC=!(AcmpC||{16{1'b0}});
-    assign AeqD=!(AcmpD||{16{1'b0}});
-    assign BeqC=!(BcmpC||{16{1'b0}});
-    assign BeqD=!(BcmpD||{16{1'b0}});
-    assign CeqD=!(CcmpD||{16{1'b0}});
-    
-    cla_16bit A1(.a(A), .b(~B), .cin(1'b1), .sum(AcmpB));
-    cla_16bit A1(.a(A), .b(~C), .cin(1'b1), .sum(AcmpC));
-    cla_16bit A1(.a(A), .b(~D), .cin(1'b1), .sum(AcmpD));
-    cla_16bit A1(.a(B), .b(~C), .cin(1'b1), .sum(BcmpC));
-    cla_16bit A1(.a(B), .b(~D), .cin(1'b1), .sum(BcmpD));
-    cla_16bit A1(.a(C), .b(~D), .cin(1'b1), .sum(CcmpD));
-
-    wire ABflag;
-    wire ACflag;
-    wire ADflag;
-    wire BCflag;
-    wire BDflag;
-    wire CDflag;
-
-    ABflag=(AcmpB[15] | AeqB);
-    ACflag=(AcmpC[15] | AeqC);
-*/
 
 endmodule
