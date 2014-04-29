@@ -7,12 +7,12 @@
 // Description: I2S Transmitter Top Level File
 
 module i2s_trnmtr(
-  wire input clk,
-  wire input n_rst,
-  wire input [32:0] parallel_data,
-  wire output ws,
-  wire output serial_data,
-  wire output sck);
+  input wire clk,
+  input wire n_rst,
+  input wire [32:0] parallel_data,
+  output wire ws,
+  output wire serial_data,
+  output wire sck);
   
   reg edge_detected;
   reg shift;

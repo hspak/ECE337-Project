@@ -9,19 +9,21 @@
 `timescale 1ns / 10ps
 
 module tb_i2s();
-  parameter CLK_PERIOD = 709;
-  parameter MAX_VAL = 44100;
+  parameter CLK_PERIOD = 708;
+  parameter MAX_VAL = 10;  //44100
   
   reg tb_clk;
   reg tb_n_rst;
-  reg [32:0] tb_parallel_data;
+  reg [32:0] tb_parallel_data_in;
+  reg [32:0] tb_parallel_data_out;
   reg tb_ws;
   reg tb_serial_data;
   reg tb_sck;
+  reg tb_clocks;
   
   i2s_trnmtr TRANSMITTER (.clk(tb_clk),
                           .n_rst(tb_n_rst),
-                          .parallel_data(tb_parallel_data),
+                          .parallel_data(tb_parallel_data_in),
                           .ws(tb_ws),
                           .serial_data(tb_serial_data),
                           .sck(tb_sck));
@@ -30,7 +32,7 @@ module tb_i2s();
                     .n_rst(tb_n_rst),
                     .ws(tb_ws),
                     .serial_data(tb_serial_data),
-                    .parallel_data(tb_parallel_data));
+                    .parallel_data(tb_parallel_data_out));
                     
   always begin
     tb_clk = 1'b1;
@@ -42,8 +44,20 @@ module tb_i2s();
   integer tb_test_case;
   
   initial begin
+    for (tb_clocks = 0; tb_clocks < 32; tb_clocks += 1) begin
+      #(CLK_PERIOD);
+    end
     for (tb_test_case = 1; tb_test_case < MAX_VAL; tb_test_case += 1) begin
-      tb_parallel_data = {tb_test_case,tb_test_case}
+      tb_parallel_data_in = {tb_test_case,tb_test_case};
+      for (tb_clocks = 0; tb_clocks < 32; tb_clocks += 1) begin
+        #(CLK_PERIOD);
+      end
+      if (tb_parallel_data_out == tb_parallel_data_in) begin
+        $info("Test Vector %0d:: PASSED", tb_test_case);
+      end
+      else begin
+        $error("Test Vector %0d:: FAILED", tb_test_case);
+      end
     end
   end
 endmodule

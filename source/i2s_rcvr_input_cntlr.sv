@@ -7,18 +7,22 @@
 // Description: I2S Receiver Input Controller
 
 module i2s_rcvr_input_cntlr(
-  wire input clk,
-  wire input n_rst,
-  wire input edge_detected,
-  wire output shift);
+  input wire clk,
+  input wire n_rst,
+  input wire edge_detected,
+  output wire shift);
+  
+  reg shift_flag;
+  
+  assign shift = shift_flag;
   
   //shift in registers
   always_comb begin
     if(edge_detected) begin
-      shift = 1'b0;
+      shift_flag = 1'b0;
     end
     else begin
-      shift = 1'b1;
+      shift_flag = 1'b1;
     end
   end
   

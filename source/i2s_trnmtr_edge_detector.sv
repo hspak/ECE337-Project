@@ -7,12 +7,15 @@
 // Description: I2S Transmitter Edge Detector
 
 module i2s_trnmtr_edge_detector(
-  wire input clk,
-  wire input n_rst,
-  wire output edge_detected);
+  input wire clk,
+  input wire n_rst,
+  output wire edge_detected);
   
   reg ff_out_1;
   reg ff_out_2;
+  reg edge_flag;
+  
+  assign edge_detected = edge_flag;
   
   //First flip-flop
   always_ff @ (posedge clk, negedge n_rst) begin
@@ -36,7 +39,7 @@ module i2s_trnmtr_edge_detector(
   
   //Detection logic
   always_comb begin
-    edge_detected = ff_out_1 & !ff_out_2;
+    edge_flag = ff_out_1 & !ff_out_2;
   end
   
 endmodule

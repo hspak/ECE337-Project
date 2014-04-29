@@ -7,18 +7,18 @@
 // Description: I2S Transmitter Shift Register
 
 module i2s_trnmtr_shift_reg(
-  wire input clk,
-  wire input n_rst,
-  wire input shift,
-  wire input load,
-  wire input [32:0] data_in,
-  wire output data_out));
+  input wire clk,
+  input wire n_rst,
+  input wire shift,
+  input wire load,
+  input wire [32:0] data_in,
+  output wire data_out);
   
-  flex_pts_sr SHIFT_REGISTER # (NUM_BITS = 32) (.clk(clk),
-                                                .n_rst(n_rst),
-                                                .shift_enable(shift),
-                                                .load_enable(load),
-                                                .parallel_in(data_in),
-                                                .serial_out(data_out));
+  flex_pts_sr # (32) SHIFT_REGISTER (.clk(clk),
+                                     .n_rst(n_rst),
+                                     .shift_enable(shift),
+                                     .load_enable(load),
+                                     .parallel_in(data_in),
+                                     .serial_out(data_out));
                                                 
 endmodule

@@ -7,11 +7,11 @@
 // Description: I2S Receiver Top Level Module
 
 module i2s_rcvr(
-  wire input clk,
-  wire input n_rst,
-  wire input ws,
-  wire input serial_data,
-  wire output [32:0] parallel_data);
+  input wire clk,
+  input wire n_rst,
+  input wire ws,
+  input wire serial_data,
+  output wire [32:0] parallel_data);
   
   reg detected;
   reg shift;

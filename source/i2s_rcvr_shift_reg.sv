@@ -7,16 +7,16 @@
 // Description: I2S Receiver Shift Register
 
 module i2s_rcvr_shift_reg(
-  wire input clk,
-  wire input n_rst,
-  wire input shift,
-  wire input data_in,
-  wire output [32:0] data_out);
+  input wire clk,
+  input wire n_rst,
+  input wire shift,
+  input wire data_in,
+  output wire [32:0] data_out);
   
-  flex_stp_sr SHIFT_REGISTER # (NUM_BITS = 32) (.clk(clk),
-                                                .n_rst(n_rst),
-                                                .shift_enable(shift),
-                                                .serial_in(data_in),
-                                                .parallel_out(data_out));
+  flex_stp_sr # (32) SHIFT_REGISTER(.clk(clk),
+                                    .n_rst(n_rst),
+                                    .shift_enable(shift),
+                                    .serial_in(data_in),
+                                    .parallel_out(data_out));
                                                 
 endmodule

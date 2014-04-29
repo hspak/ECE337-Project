@@ -7,13 +7,16 @@
 // Description: I2S Receiver Edge Detector
 
 module i2s_rcvr_edge_detector(
-  wire input clk,
-  wire input n_rst,
-  wire input ws,
-  wire output edge_detected);
+  input wire clk,
+  input wire n_rst,
+  input wire ws,
+  output wire edge_detected);
   
   reg ff_out_1;
   reg ff_out_2;
+  reg edge_detected_flag;
+  
+  assign edge_detected = edge_detected_flag;
   
   //First flip-flop
   always_ff @ (posedge clk, negedge n_rst) begin
@@ -37,7 +40,7 @@ module i2s_rcvr_edge_detector(
   
   //Detection logic
   always_comb begin
-    edge_detected = ff_out_1 & !ff_out_2;
+    edge_detected_flag = ff_out_1 & !ff_out_2;
   end
   
 endmodule
