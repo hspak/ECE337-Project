@@ -32,7 +32,7 @@ module mult16by4(
   //add 18 bits
   cla_16bit A2(.a(sums[0][15:0]), .b(ab2[15:0]), .cin(1'b0), .cout(couts[1]), .sum(sums[1][15:0])); //get first 16 bits and carry
   adder_1bit A2_1(.a(sums[0][16]), .b(ab2[16]), .carry_in(couts[1]), .sum(sums[1][16]), .carry_out(couts[2])); //get 17th bit
-  adder_1bit A2_2(.a(sums[0][17]), .b(ab3[17]), .carry_in(couts[2]), .sum(sums[1][17]), .carry_out(sums[1][18])); //get 18th bit and carry
+  adder_1bit A2_2(.a(sums[0][17]), .b(ab2[17]), .carry_in(couts[2]), .sum(sums[1][17]), .carry_out(sums[1][18])); //get 18th bit and carry
   
   //add 19 bits
   cla_16bit A3(.a(sums[1][15:0]), .b(ab3[15:0]), .cin(1'b0), .cout(couts[3]), .sum(sums[2][15:0])); //get first 16 bits and carry
