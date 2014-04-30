@@ -15,37 +15,18 @@ module tb_flanger();
   reg tb_clk;
   reg tb_n_rst;
   reg tb_flanger_en;
-  reg tb_shift_en;
   reg [31:0] tb_input_data;
   reg [31:0] tb_output_data;
-  reg [31:0] tb_flanger_output;
 
-  reg tb_clk_div;
-
-  clk_div DIV(
+  flanger_wrapper DUT(
     .clk(tb_clk),
     .n_rst(tb_n_rst),
-    .clk_div(tb_clk_div),
-    .shift_en(tb_shift_en)
-  );
-
-  flex_buffer #(32) BUF(
-    .clk(tb_clk_div),
-    .n_rst(tb_n_rst),
+    .flanger_en(tb_flanger_en),
     .input_data(tb_input_data),
     .output_data(tb_output_data)
   );
 
-  flanger DUT(
-    .clk(tb_clk),
-    .n_rst(tb_n_rst),
-    .flanger_en(tb_flanger_en),
-    .shift_en(tb_shift_en),
-    .input_data(tb_output_data),
-    .output_data(tb_flanger_output)
-  );
-
-  always begin
+ always begin
     tb_clk = 1'b1;
     #(CLK_PERIOD/2);
     tb_clk = 1'b0;
