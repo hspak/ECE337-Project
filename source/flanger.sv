@@ -11,379 +11,69 @@ module flanger(
   input wire flanger_en,
   input wire shift_en,
   input wire [31:0] input_data,
-  output reg [31:0] output_data
+  output reg [31:0] output_data,
+  output reg sram_rw
 );
 
-reg r_en;
-reg w_en;
-reg [15:0] addr;
-reg [15:0] r_data;
-reg [15:0] r_data_save;
-reg [15:0] w_data;
-reg [31:0] sram_data;
-reg [31:0] adder_data;
+  reg [31:0] adder_data;
+  reg [31:0] sram_data;
 
-reg mem_clr;
-reg mem_init;
-reg mem_dump;
+  flanger_adder ADD(
+    .flanger_data(input_data),
+    .sram_data(sram_data),
+    .output_data(adder_data)
+  );
 
-reg [15:0] w_addr;
-reg [15:0] r_addr;
-reg [15:0] w_addr_next;
-reg [15:0] r_addr_next;
+  typedef enum bit {
+    idle,
+    rw_data
+  } state;
 
-reg [31:0] sram_data_next;
-reg [15:0] r_data_save_next;
+  state next_st;
+  state curr_st;
 
-on_chip_sram_wrapper DUT(
-  .init_file_number(0),
-  .dump_file_number(0),
-  .mem_clr(mem_clr),
-  .mem_init(mem_init),
-  .mem_dump(mem_dump),
-  .start_address(16'b0),
-  .last_address(16'h1090),
-  .verbose(1'b1),
-  .read_enable(r_en),
-  .write_enable(w_en),
-  .address(addr),
-  .read_data(r_data), // output
-  .write_data(w_data)
-);
-
-flanger_adder ADD(
-  .flanger_data(input_data),
-  .sram_data(sram_data),
-  .output_data(adder_data)
-);
-
-typedef enum bit [3:0] {setup, idle, enable_read, read_1, enable_read_2, read_2, enable_write, write_1, write_enable_2, write_2} stateType;
-
-stateType next;
-stateType curr;
-
-// reg
-always @ (posedge clk, negedge n_rst) begin
-  if (!n_rst) begin
-    curr <= setup;
-  end else begin
-    curr <= next;
-  end         
-end
-
-
-always @ (posedge clk, negedge n_rst) begin
-  if (!n_rst) begin
-    w_addr <= 16'b0;
-  end else if (w_addr == 16'h19d0) begin
-    w_addr <= 16'b0;
-  end else begin
-    w_addr <= w_addr_next;
+  always_ff @ (posedge clk, negedge n_rst) begin
+    curr_st <= next_st;
+    if (!n_rst)
+      curr_st <= idle;
   end
-end
 
-always @ (posedge clk, negedge n_rst) begin
-  if (!n_rst) begin
-    r_addr <= 16'h0010;
-  end else if (r_addr == 16'h19d0) begin
-    r_addr <= 16'b0;
-  end else begin
-    r_addr <= r_addr_next;
+  // next state logic
+  always_comb begin
+    case(curr_st)
+      idle:
+        if (shift_en)
+          next_st = rw_data;
+        else
+          next_st = idle;
+
+      rw_data:
+        next_st = idle;
+
+      default:
+        next_st = idle;
+    endcase
+
+    if (!flanger_en)
+      next_st = idle;
   end
-end
 
-always_ff @ (posedge clk, negedge n_rst) begin
-  if (!n_rst) begin
-    r_data_save <= '0;
-  end else begin
-    r_data_save <= r_data_save_next;
+  // output logic
+  always_comb begin
+    case(curr_st)
+      idle:
+        sram_rw = 1'b0;
+
+      rw_data:
+        sram_rw = 1'b1;
+
+      default:
+        sram_rw = 1'b0;
+    endcase
+
+    if (!flanger_en)
+      sram_rw = 1'b0;
   end
-end
 
-always_ff @ (posedge clk, negedge n_rst) begin
-  if (!n_rst) begin
-    sram_data <= '0;
-  end else begin
-    sram_data <= sram_data_next;
-  end
-end
-
-
-// next state
-always_comb begin
-  case(curr)
-    setup: begin
-      if (flanger_en) begin
-        next = idle;
-      end else begin
-        next = setup;
-      end
-    end
-
-    idle: begin
-      if (flanger_en && shift_en) begin
-        next = enable_read;
-      end else begin
-        next = idle;
-      end
-    end
-
-    enable_read: begin
-      if (flanger_en) begin
-        next = read_1;
-      end else begin
-        next = idle;
-      end
-    end
-
-    read_1: begin
-      if (flanger_en) begin
-        next = enable_read_2;
-      end else begin
-        next = idle;
-      end
-    end
-
-    enable_read_2: begin
-      if (flanger_en) begin
-        next = read_2;
-      end else begin
-        next = idle;
-      end
-    end
-
-    read_2: begin
-      if (flanger_en) begin
-        next = enable_write;
-      end else begin
-        next = idle;
-      end
-    end
-
-    enable_write: begin
-      if (flanger_en) begin
-        next = write_1;
-      end else begin
-        next = idle;
-      end
-    end
-
-    write_1: begin
-      if (flanger_en) begin
-        next = write_enable_2;
-      end else begin
-        next = idle;
-      end
-    end
-
-    write_enable_2: begin
-      if (flanger_en) begin
-        next = write_2;
-      end else begin
-        next = idle;
-      end
-    end
-
-    write_2: begin
-      next = idle;
-    end
-
-    default: begin
-      next = setup;
-    end
-  endcase
-end
-
-always_comb begin
-  case(curr)
-    setup: begin
-      r_addr_next = 16'h0010; // read starts at 16-bits offset
-      w_addr_next = 16'b0;
-
-      mem_clr = 1'b1; // reset all memory to 0
-      mem_init = 1'b0;
-      mem_dump = 1'b0;
-
-      r_en = 1'b0;
-      w_en = 1'b0;
-      addr = 16'b0;
-
-      w_data = 16'b0;
-      r_data_save_next = 16'b0;
-      sram_data_next = 32'b0;
-    end
-
-    idle: begin
-      r_addr_next = r_addr;
-      w_addr_next = w_addr;
-
-      mem_clr = 1'b0;
-      mem_init = 1'b0;
-      mem_dump = 1'b0;
-
-      r_en = 1'b0;
-      w_en = 1'b0;
-      addr = 16'b0;
-
-      w_data = 16'b0;
-      r_data_save_next = 16'b0;
-      sram_data_next = sram_data;
-    end
-
-    enable_read: begin
-      r_addr_next = r_addr;
-      w_addr_next = w_addr;
-
-      mem_clr = 1'b0;
-      mem_init = 1'b0;
-      mem_dump = 1'b0;
-
-      r_en = 1'b0;
-      w_en = 1'b0;
-      addr = r_addr;
-
-      w_data = 16'b0;
-      r_data_save_next = 16'b0;
-      sram_data_next = sram_data;
-    end
-
-    read_1: begin
-      r_addr_next = r_addr + 16;
-      w_addr_next = w_addr;
-
-      mem_clr = 1'b0;
-      mem_init = 1'b0;
-      mem_dump = 1'b0;
-
-      r_en = 1'b1;
-      w_en = 1'b0;
-      addr = r_addr;
-
-      w_data = 16'b0;
-      r_data_save_next = r_data;
-      sram_data_next = sram_data;
-    end
-
-    enable_read_2: begin
-      r_addr_next = r_addr;
-      w_addr_next = w_addr;
-
-      mem_clr = 1'b0;
-      mem_init = 1'b0;
-      mem_dump = 1'b1;
-
-      r_en = 1'b0;
-      w_en = 1'b0;
-      addr = r_addr;
-
-      w_data = 16'b0;
-      r_data_save_next = r_data_save;
-      sram_data_next = sram_data; 
-    end
-
-    read_2: begin
-      r_addr_next = r_addr + 16;
-      w_addr_next = w_addr;
-
-      mem_clr = 1'b0;
-      mem_init = 1'b0;
-      mem_dump = 1'b0;
-
-      r_en = 1'b1;
-      w_en = 1'b0;
-      addr = r_addr;
-
-      w_data = 16'b0;
-      r_data_save_next = r_data_save;
-      sram_data_next = {r_data_save, r_data};
-    end
-
-    enable_write: begin
-      r_addr_next = r_addr;
-      w_addr_next = w_addr + 16;
-
-      mem_clr = 1'b0;
-      mem_init = 1'b0;
-      mem_dump = 1'b0;
-
-      r_en = 1'b0;
-      w_en = 1'b1;
-      addr = w_addr;
-
-      w_data = input_data[15:0];
-      r_data_save_next = 16'b0;
-      sram_data_next = sram_data;
-    end
-
-    write_1: begin
-      r_addr_next = r_addr;
-      w_addr_next = w_addr;
-
-      mem_clr = 1'b0;
-      mem_init = 1'b0;
-      mem_dump = 1'b0;
-
-      r_en = 1'b0;
-      w_en = 1'b0;
-      addr = w_addr;
-
-      w_data = 1'b0;
-      r_data_save_next = 16'b0;
-      sram_data_next = sram_data;
-    end
-
-    write_enable_2: begin
-      r_addr_next = r_addr;
-      w_addr_next = w_addr + 16;
-
-      mem_clr = 1'b0;
-      mem_init = 1'b0;
-      mem_dump = 1'b0;
-
-      r_en = 1'b0;
-      w_en = 1'b1;
-      addr = w_addr;
-      w_data = input_data[31:16];
-      r_data_save_next = 1'b0;
-      sram_data_next = sram_data;
-    end
-
-    write_2: begin
-      r_addr_next = r_addr;
-      w_addr_next = w_addr;
-
-      mem_clr = 1'b0;
-      mem_init = 1'b0;
-      mem_dump = 1'b0;
-
-      r_en = 1'b0;
-      w_en = 1'b0;
-      addr = w_addr;
-
-      w_data = 1'b0;
-      r_data_save_next = 16'b0;
-      sram_data_next = sram_data;
-    end
-
-    default: begin
-      r_addr_next = 16'h0010; // read starts at 16-bits offset
-      w_addr_next = 16'b0;
-
-      mem_clr = 1'b1; // reset all memory to 0
-      mem_init = 1'b0;
-      mem_dump = 1'b0;
-
-      r_en = 1'b0;
-      w_en = 1'b0;
-      addr = 16'b0;
-
-      w_data = 16'b0;
-      r_data_save_next = 16'b0;
-      sram_data_next = 32'b0;
-    end
-  endcase
-end
-
-assign output_data = (!flanger_en ? input_data : adder_data);
-
+  assign output_data = (!flanger_en ? input_data : adder_data);
 endmodule
