@@ -10,20 +10,28 @@
 // 1.4112 MHz
 
 module tb_flanger();
-  localparam CLK_PERIOD = 708;
+  localparam CLK_PERIOD = 708; // 708
 
   reg tb_clk;
   reg tb_n_rst;
   reg tb_flanger_en;
   reg [31:0] tb_input_data;
   reg [31:0] tb_output_data;
+  
+  reg tb_memclr;
+  reg tb_mem_init;
+  reg tb_mem_dump;
 
   flanger_wrapper DUT(
     .clk(tb_clk),
     .n_rst(tb_n_rst),
     .flanger_en(tb_flanger_en),
     .input_data(tb_input_data),
-    .output_data(tb_output_data)
+    .output_data(tb_output_data),
+    .memclk(tb_clk),
+    .memclr(tb_memclr),
+    .mem_init(tb_mem_init),
+    .mem_dump(tb_mem_dump)
   );
 
  always begin
@@ -41,8 +49,18 @@ module tb_flanger();
     tb_test_case = 0;
     tb_n_rst = 1'b0;
 
+    tb_memclr = 0;
+    tb_mem_init = 0;
+    tb_mem_dump = 0;
+
     tb_flanger_en = 1'b1;
     tb_input_data = 32'h99991111;
+    @(posedge tb_clk);
+
+    tb_memclr = 1'b1;
+    @(posedge tb_clk);
+
+    tb_memclr = 0;
     @(posedge tb_clk);
 
     // begin

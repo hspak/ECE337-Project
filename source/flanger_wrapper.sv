@@ -5,16 +5,24 @@
 // Lab Section: 337-04
 // Version:     1.0  Initial Design Entry
 // Description: .
+
 module flanger_wrapper(
   input wire clk,
   input wire n_rst,
   input wire flanger_en,
   input wire [31:0] input_data,
-  output reg [31:0] output_data
+  output reg [31:0] output_data,
+
+  input wire memclk,
+  input wire memclr,
+  input wire mem_init,
+  input wire mem_dump
 );
   reg clk_div;
   reg shift_en;
   reg [31:0] output_buffer;
+  reg [31:0] read_data;
+  reg sram_rw;
 
   clk_div DIV(
     .clk(clk),
@@ -36,6 +44,19 @@ module flanger_wrapper(
     .flanger_en(flanger_en),
     .shift_en(shift_en),
     .input_data(output_buffer),
-    .output_data(output_data)
+    .read_data(read_data),
+    .output_data(output_data),  // output
+    .sram_rw(sram_rw)           // output
+  );
+
+  sram_controller RAMC(
+    .clk(memclk),
+    .n_rst(n_rst),
+    .rw_trigger(sram_rw),
+    .mem_clr(memclr),
+    .mem_init(mem_init),
+    .mem_dump(mem_dump),
+    .write_data(input_data),
+    .sram_data(read_data) // output
   );
 endmodule 

@@ -11,16 +11,16 @@ module flanger(
   input wire flanger_en,
   input wire shift_en,
   input wire [31:0] input_data,
+  input wire [31:0] read_data,
   output reg [31:0] output_data,
   output reg sram_rw
 );
 
   reg [31:0] adder_data;
-  reg [31:0] sram_data;
 
   flanger_adder ADD(
     .flanger_data(input_data),
-    .sram_data(sram_data),
+    .sram_data(read_data),
     .output_data(adder_data)
   );
 
@@ -33,9 +33,10 @@ module flanger(
   state curr_st;
 
   always_ff @ (posedge clk, negedge n_rst) begin
-    curr_st <= next_st;
     if (!n_rst)
       curr_st <= idle;
+    else 
+      curr_st <= next_st;
   end
 
   // next state logic

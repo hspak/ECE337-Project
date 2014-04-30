@@ -19,21 +19,15 @@ module clk_div(
   always_ff @ (posedge clk, negedge n_rst) begin
     if (!n_rst) begin
       curr_c <= '0;
-    end else begin
-      curr_c <= next_c;
-    end
-  end
-
-  always_ff @ (posedge clk, negedge n_rst) begin
-    if (!n_rst) begin
       clk_div <= '0;
     end else begin
+      curr_c <= next_c;
       clk_div <= clk_div_next;
     end
   end
 
   always_comb begin
-    if (next_c == 5'b10000) begin
+    if (curr_c == 5'b10000) begin
       next_c = 5'b0;
       clk_div_next = !clk_div;
       shift_en = clk_div;
