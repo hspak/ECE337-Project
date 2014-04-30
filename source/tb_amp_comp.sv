@@ -9,8 +9,8 @@
 `timescale 1ns / 100ps
 module tb_amp_comp;
     
-    local param CLK_PERIOD = 5;
-    local param INPUT_NUM = 8;
+    localparam CLK_PERIOD = 5;
+    localparam INPUT_NUM = 8;
     // Inputs
     reg [15:0] tb_input;
     reg [3:0] tb_thresh;
@@ -33,14 +33,14 @@ module tb_amp_comp;
     
     //initialize input vector
     reg [15:0] input_vec [INPUT_NUM-1:0];
-    input_vec[0]=16'hff00;
-    input_vec[1]=16'h7f00;
-    input_vec[2]=16'h88ff;
-    input_vec[3]=16'h38f0;
-    input_vec[4]=16'h210f;
-    input_vec[5]=16'hb100;
-    input_vec[6]=16'haa00;
-    input_vec[7]=16'h4c00;
+    assign input_vec[0]=16'hff00;
+    assign input_vec[1]=16'h7f00;
+    assign input_vec[2]=16'h88ff;
+    assign input_vec[3]=16'h38f0;
+    assign input_vec[4]=16'h210f;
+    assign input_vec[5]=16'hb100;
+    assign input_vec[6]=16'haa00;
+    assign input_vec[7]=16'h4c00;
 
     always begin
         tb_clk = 1'b1;
@@ -49,21 +49,21 @@ module tb_amp_comp;
         #(CLK_PERIOD/2);
     end
 
-    initial begin
+  initial begin
     // Initialize Inputs
     tb_input = 0;  tb_thresh = 0; tb_n_rst = 1;
     // Wait 100 ns for global reset to finish
     #10;
     tb_n_rst = 0;
-    #40;
+    #5;
     tb_n_rst = 1;
-    #40;
+    #(2*CLK_PERIOD);
     tb_thresh=4'b0110;
     for(i=0;i<INPUT_NUM;i++) begin
       tb_input=input_vec[i];
       #CLK_PERIOD;
     end
-    
+  end
         
     // Add stimulus here
     
