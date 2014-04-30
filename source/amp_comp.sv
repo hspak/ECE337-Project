@@ -111,7 +111,7 @@ module amp_comp(
       (max[13]?{{13{1'b0}},product[19:17]}:
       (max[12]?{{12{1'b0}},product[19:16]}:
       (max[11]?{{11{1'b0}},product[19:15]}:
-      {16{1'b0}}))));
+      {16{1'b0}})))); //bit shift output based on max
 
     wire [15:0] out_abs_val;
     cla_16bit A6(.a(D), .b(~modifier), .cin(1'b1), .sum(out_abs_val));
