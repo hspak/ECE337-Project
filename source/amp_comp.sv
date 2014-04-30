@@ -106,10 +106,15 @@ module amp_comp(
     cla_16bit A5(.a(max), .b(~{1'b0,in_thresh,{11{1'b0}}}), .cin(1'b1), .sum(diff2)); //subtract max from threshold value
     mult16by4 M1(.a(D), .b(diff2[14:11]), .product(product)); //multiply the 4 most significant non-sign bits by D (an absolute value)
 
-    assign modifier = !enable?{16{1'b0}}:(max[14]?{{14{1'b0}},product[19:18]}:(max[13]?{{13{1'b0}},product[19:17]}:(max[12]?{{12{1'b0}},product[19:16]}:(max[11]?{{11{1'b0}},product[19:15]}:{16{1'b0}}))));
+    assign modifier = !enable?{16{1'b0}}:
+      (max[14]?{{14{1'b0}},product[19:18]}:
+      (max[13]?{{13{1'b0}},product[19:17]}:
+      (max[12]?{{12{1'b0}},product[19:16]}:
+      (max[11]?{{11{1'b0}},product[19:15]}:
+      {16{1'b0}}))));
 
     wire [15:0] out_abs_val;
-    cla_16bit A6(.a(in_abs_val), .b(~modifier), .cin(1'b1), .sum(out_abs_val));
+    cla_16bit A6(.a(D), .b(~modifier), .cin(1'b1), .sum(out_abs_val));
 
     /*Output positive or negative*/
     wire [15:0] neg_sign_out;
