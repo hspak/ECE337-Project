@@ -9,6 +9,8 @@
 module i2s_trnmtr_edge_detector(
   input wire clk,
   input wire n_rst,
+  input wire ws,
+  output wire wsd,
   output wire edge_detected);
   
   reg ff_out_1;
@@ -16,6 +18,7 @@ module i2s_trnmtr_edge_detector(
   reg edge_flag;
   
   assign edge_detected = edge_flag;
+  assign wsd = ff_out_1;
   
   //First flip-flop
   always_ff @ (posedge clk, negedge n_rst) begin
@@ -23,7 +26,7 @@ module i2s_trnmtr_edge_detector(
       ff_out_1 <= 1'b0;
     end
     else begin
-      ff_out_1 <= clk;
+      ff_out_1 <= ws;
     end
   end
   
@@ -39,7 +42,7 @@ module i2s_trnmtr_edge_detector(
   
   //Detection logic
   always_comb begin
-    edge_flag = ff_out_1 & !ff_out_2;
+    edge_flag = ff_out_1 ^ ff_out_2;
   end
   
 endmodule
