@@ -79,7 +79,7 @@ module ud_flex_counter
       end      
     if (clear)
       begin
-        next = 21'b101011000100010100001;
+        next = 21'b000000000000000000000;
       end
   end
   
