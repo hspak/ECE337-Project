@@ -27,19 +27,27 @@ reg mem_clr;
 reg mem_init;
 reg mem_dump;
 
+reg [15:0] w_addr;
+reg [15:0] r_addr;
+reg [15:0] w_addr_next;
+reg [15:0] r_addr_next;
+
+reg [31:0] sram_data_next;
+reg [15:0] r_data_save_next;
+
 on_chip_sram_wrapper DUT(
   .init_file_number(0),
   .dump_file_number(0),
   .mem_clr(mem_clr),
   .mem_init(mem_init),
   .mem_dump(mem_dump),
-  .start_address(0),
+  .start_address(16'b0),
   .last_address(16'h1090),
-  .verbose(1'b0),
+  .verbose(1'b1),
   .read_enable(r_en),
   .write_enable(w_en),
   .address(addr),
-  .read_data(r_data),
+  .read_data(r_data), // output
   .write_data(w_data)
 );
 
@@ -63,10 +71,6 @@ always @ (posedge clk, negedge n_rst) begin
   end         
 end
 
-reg [15:0] w_addr;
-reg [15:0] r_addr;
-reg [15:0] w_addr_next;
-reg [15:0] r_addr_next;
 
 always @ (posedge clk, negedge n_rst) begin
   if (!n_rst) begin
@@ -88,14 +92,11 @@ always @ (posedge clk, negedge n_rst) begin
   end
 end
 
-reg [31:0] sram_data_save;
-reg [15:0] r_data_save_save;
-
 always_ff @ (posedge clk, negedge n_rst) begin
   if (!n_rst) begin
     r_data_save <= '0;
   end else begin
-    r_data_save <= r_data_save_save;
+    r_data_save <= r_data_save_next;
   end
 end
 
@@ -103,7 +104,7 @@ always_ff @ (posedge clk, negedge n_rst) begin
   if (!n_rst) begin
     sram_data <= '0;
   end else begin
-    sram_data <= sram_data_save;
+    sram_data <= sram_data_next;
   end
 end
 
@@ -206,9 +207,10 @@ always_comb begin
       r_en = 1'b0;
       w_en = 1'b0;
       addr = 16'b0;
+
       w_data = 16'b0;
-      r_data_save = 16'b0;
-      sram_data = 32'b0;
+      r_data_save_next = 16'b0;
+      sram_data_next = 32'b0;
     end
 
     idle: begin
@@ -222,9 +224,10 @@ always_comb begin
       r_en = 1'b0;
       w_en = 1'b0;
       addr = 16'b0;
+
       w_data = 16'b0;
-      r_data_save = 16'b0;
-      sram_data = sram_data_save;
+      r_data_save_next = 16'b0;
+      sram_data_next = sram_data;
     end
 
     enable_read: begin
@@ -238,9 +241,10 @@ always_comb begin
       r_en = 1'b0;
       w_en = 1'b0;
       addr = r_addr;
+
       w_data = 16'b0;
-      r_data_save = 16'b0;
-      sram_data = sram_data_save;
+      r_data_save_next = 16'b0;
+      sram_data_next = sram_data;
     end
 
     read_1: begin
@@ -254,9 +258,10 @@ always_comb begin
       r_en = 1'b1;
       w_en = 1'b0;
       addr = r_addr;
+
       w_data = 16'b0;
-      r_data_save = r_data;
-      sram_data = sram_data_save;
+      r_data_save_next = r_data;
+      sram_data_next = sram_data;
     end
 
     enable_read_2: begin
@@ -270,9 +275,10 @@ always_comb begin
       r_en = 1'b0;
       w_en = 1'b0;
       addr = r_addr;
+
       w_data = 16'b0;
-      r_data_save = r_data_save_save;
-      sram_data = sram_data_save; 
+      r_data_save_next = r_data_save;
+      sram_data_next = sram_data; 
     end
 
     read_2: begin
@@ -286,9 +292,10 @@ always_comb begin
       r_en = 1'b1;
       w_en = 1'b0;
       addr = r_addr;
+
       w_data = 16'b0;
-      r_data_save = r_data_save_save;
-      sram_data = {r_data_save, r_data};
+      r_data_save_next = r_data_save;
+      sram_data_next = {r_data_save, r_data};
     end
 
     enable_write: begin
@@ -302,9 +309,10 @@ always_comb begin
       r_en = 1'b0;
       w_en = 1'b1;
       addr = w_addr;
+
       w_data = input_data[15:0];
-      r_data_save = 16'b0;
-      sram_data = sram_data_save;
+      r_data_save_next = 16'b0;
+      sram_data_next = sram_data;
     end
 
     write_1: begin
@@ -318,9 +326,10 @@ always_comb begin
       r_en = 1'b0;
       w_en = 1'b0;
       addr = w_addr;
-      w_data = 0;
-      r_data_save = 16'b0;
-      sram_data = sram_data_save;
+
+      w_data = 1'b0;
+      r_data_save_next = 16'b0;
+      sram_data_next = sram_data;
     end
 
     write_enable_2: begin
@@ -331,12 +340,12 @@ always_comb begin
       mem_init = 1'b0;
       mem_dump = 1'b0;
 
-      r_en = 0;
+      r_en = 1'b0;
       w_en = 1'b1;
       addr = w_addr;
       w_data = input_data[31:16];
-      r_data_save = 0;
-      sram_data = sram_data_save;
+      r_data_save_next = 1'b0;
+      sram_data_next = sram_data;
     end
 
     write_2: begin
@@ -350,9 +359,10 @@ always_comb begin
       r_en = 1'b0;
       w_en = 1'b0;
       addr = w_addr;
-      w_data = 0;
-      r_data_save = 16'b0;
-      sram_data = sram_data_save;
+
+      w_data = 1'b0;
+      r_data_save_next = 16'b0;
+      sram_data_next = sram_data;
     end
 
     default: begin
@@ -366,9 +376,10 @@ always_comb begin
       r_en = 1'b0;
       w_en = 1'b0;
       addr = 16'b0;
+
       w_data = 16'b0;
-      r_data_save = 16'b0;
-      sram_data = 32'b0;
+      r_data_save_next = 16'b0;
+      sram_data_next = 32'b0;
     end
   endcase
 end
