@@ -11,8 +11,8 @@
 module tb_daf();
   localparam CLK_PERIOD = 708;
 
-  localparam INPUT_FILE = "./scripts/raw";
-  localparam OUTPUT_FILE = "./scripts/modded";
+  localparam INPUT_FILE = "./Pompeii.wav";
+  localparam OUTPUT_FILE = "./outputt.wav";
 
   // input
   reg tb_clk;
@@ -27,7 +27,7 @@ module tb_daf();
   reg [3:0] swch_mode_en;
 
   // intermmediate
-  reg tb_sck;
+/*  reg tb_sck;
   reg tb_ws;
   reg [31:0] tb_parallel_i2s;
 
@@ -44,7 +44,7 @@ module tb_daf();
   // reg [31:0] tb_parallel_buf_acmcop;
   // reg [31:0] tb_parallel_ampcop;
   // reg [31:0] tb_parallel_buf_trns;
-  reg [31:0] tb_parallel_buf_fad;
+  reg [31:0] tb_parallel_buf_fad;*/
   reg [31:0] tb_parallel_fad;
 
   reg [31:0] temp;
@@ -57,6 +57,16 @@ module tb_daf();
   // output
   reg tb_serial_output;
 
+
+daf DAFF(
+.tb_clk(tb_clk),
+.tb_n_rst(tb_n_rst),
+.temp(temp),
+.pot_vol(pot_vol),
+.pot_amp(pot_amp),
+.swch_mode_en(swch_mode_en),
+.parallel_fad(tb_parallel_fad)
+);
   // i2s_trnmtr TRNS(
     // .clk(tb_clk),
     // .n_rst(tb_n_rst),
@@ -74,13 +84,7 @@ module tb_daf();
     // .parallel_data(tb_parallel_i2s)
   // );
 
-  clk_div DIVIDER(
-    .clk(tb_clk),
-    .n_rst(tb_n_rst),
-    .clk_div(tb_clk_div),
-    .shift_en(tb_shift_en)
-  );
-
+  
   // flex_buffer #(32) BVOL(
     // .clk(tb_clk_div),
     // .n_rst(tb_n_rst),
@@ -100,7 +104,8 @@ module tb_daf();
     // .output_data(tb_parallel_vol_lower)
   // );
 
-  flex_buffer #(32) BFLANG(
+  
+/*  flex_buffer #(32) BFLANG(
     .clk(tb_clk_div),
     .n_rst(tb_n_rst),
     // .input_data({tb_parallel_vol_upper,tb_parallel_vol_lower}),
@@ -150,7 +155,7 @@ module tb_daf();
     .fad_enable(swch_mode_en[0]),
     .signal_in(tb_parallel_buf_fad),
     .signal_out(tb_parallel_fad)
-  );
+  );*/
  
   // flex_buffer #(32) BTRNS(
     // .clk(tb_clk_div),
@@ -170,8 +175,10 @@ module tb_daf();
     tb_n_rst = 1'b0;
     tb_serial_input = 1'b0;
     pot_vol = 4'b1111;
-    pot_amp = 4'b0010;
+    pot_amp = 4'b1111;
     swch_mode_en = 4'b1111;
+    
+    
     @(posedge tb_clk);
 
     // start
