@@ -38,7 +38,7 @@ module fader (
   .product(prod2)
   );
 
-assign signal_out[31:16] = (fad_enable ? prod1[19:4] : signal_in[31:16]);
-assign signal_out[15:0] = (fad_enable ? prod2[19:4] : signal_in[15:0]);
+assign signal_out[31:16] = prod1[19:4];//(fad_enable ? prod1[19:4] : signal_in[31:16]);
+assign signal_out[15:0] = prod2[19:4];//(fad_enable ? prod2[19:4] : signal_in[15:0]);
 
 endmodule
