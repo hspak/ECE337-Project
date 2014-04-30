@@ -9,7 +9,7 @@
 `timescale 1ns / 100ps
 module tb_amp_comp;
     
-    localparam CLK_PERIOD = 5;
+    localparam CLK_PERIOD = 20;
     localparam INPUT_NUM = 8;
     // Inputs
     reg [15:0] tb_input;
@@ -18,7 +18,7 @@ module tb_amp_comp;
     reg tb_n_rst;
 
     // Outputs
-    reg [19:0] tb_output;
+    reg [15:0] tb_output;
 
     // Instantiate the Unit Under Test (UUT)
     amp_comp DUT(
@@ -60,8 +60,9 @@ module tb_amp_comp;
     #(2*CLK_PERIOD);
     tb_thresh=4'b0110;
     for(i=0;i<INPUT_NUM;i++) begin
+      @(negedge tb_clk)
       tb_input=input_vec[i];
-      #CLK_PERIOD;
+      
     end
   end
         
