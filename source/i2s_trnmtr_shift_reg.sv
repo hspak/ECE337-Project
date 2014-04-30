@@ -11,7 +11,7 @@ module i2s_trnmtr_shift_reg(
   input wire n_rst,
   input wire shift,
   input wire load,
-  input wire [32:0] data_in,
+  input wire [31:0] data_in,
   output wire data_out);
   
   flex_pts_sr # (32) SHIFT_REGISTER (.clk(clk),

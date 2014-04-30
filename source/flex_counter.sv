@@ -1,13 +1,9 @@
-// $Id: $
-// File name:   flex_counter.sv
-// Created:     2/12/2014
-// Author:      Hong Shick Pak
-// Lab Section: 337-04
-// Version:     1.0  Initial Design Entry
-// Description: counter
+//Counter
+//counts clock cycles
+
 module flex_counter
 #(
-  NUM_CNT_BITS = 4
+	parameter NUM_CNT_BITS = 4
 )
 (
   input wire clk,
@@ -19,39 +15,37 @@ module flex_counter
   output wire rollover_flag
 );
 
-reg [NUM_CNT_BITS:0] curr;
-reg [NUM_CNT_BITS:0] next;
-
-always_ff @ (posedge clk, negedge n_rst) begin
-  if (!n_rst) begin
-    curr <= '0;
-  end else begin
-    curr <= next;
-  end
-end
+reg r_flag;
+reg [NUM_CNT_BITS-1:0] counter;
+integer roll_reset_val = 1;
+assign rollover_flag=r_flag;
+assign count_out=counter;
 
 always_comb begin
-  if (count_enable) begin
-    if (curr[NUM_CNT_BITS-1:0] == (rollover_val-1)) begin
-      // next = {1'b1, {(NUM_CNT_BITS-1){1'b0}}, 1'b1};
-      next = {1'b1, rollover_val};
-    end else begin
-      if (curr[NUM_CNT_BITS]) begin
-        next = {{(NUM_CNT_BITS){1'b0}}, 1'b1};
-      end else begin
-        next = curr + 1;
-      end
-    end
-  end else begin
-    next = curr;
-  end
-
-  if (clear) begin
-    next = '0;
-  end
+  r_flag=(counter==rollover_val);
 end
 
-assign count_out = curr[NUM_CNT_BITS-1:0];
-assign rollover_flag = curr[NUM_CNT_BITS];
+always_ff@(posedge clk, negedge n_rst) begin
+  if (n_rst==0) begin
+    counter<='0;
+  end
+  else if (clear==1) begin
+    counter<='0;
+  end
+  else if (count_enable==1) begin
+    if (r_flag) begin
+      counter<=1;
+    end
+    else if (counter == (2**NUM_CNT_BITS-1)) begin
+      counter<=1;
+    end
+    else begin
+      counter<=counter+1;
+    end
+  end
+  else begin
+    counter<=counter;
+  end
+end
 
 endmodule
