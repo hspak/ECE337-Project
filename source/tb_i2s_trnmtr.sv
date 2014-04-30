@@ -15,6 +15,8 @@ module tb_i2s_trnmtr();
   reg tb_clk;
   reg tb_n_rst;
   reg [31:0] tb_parallel_data_in;
+  reg [15:0] tb_left_channel;
+  reg [15:0] tb_right_channel;
   reg [31:0] tb_parallel_data_out;
   reg tb_ws;
   reg tb_serial_data;
@@ -24,7 +26,7 @@ module tb_i2s_trnmtr();
   i2s_trnmtr TRANSMITTER (.clk(tb_clk),
                           .n_rst(tb_n_rst),
                           .parallel_data(tb_parallel_data_in),
-                          .ws(tb_ws),
+                          .ws_flag(tb_ws),
                           .serial_data(tb_serial_data),
                           .sck(tb_sck));
                           
@@ -32,7 +34,8 @@ module tb_i2s_trnmtr();
                     .n_rst(tb_n_rst),
                     .ws(tb_ws),
                     .serial_data(tb_serial_data),
-                    .parallel_data(tb_parallel_data_out));
+                    .left_channel(tb_left_channel),
+                    .right_channel(tb_right_channel));
                     
   always begin
     tb_clk = 1'b1;
@@ -41,19 +44,22 @@ module tb_i2s_trnmtr();
     #(CLK_PERIOD/2);
   end
   
-  integer tb_test_case;
+  reg [15:0] tb_test_case;
   
   initial begin
+    tb_n_rst = 1'b0;
+    @(negedge tb_clk);
     tb_n_rst = 1'b1;
-    tb_parallel_data_in = 32'hFAAAAAA0; //{tb_test_case,tb_test_case};
-    for (tb_clocks = 0; tb_clocks < 32; tb_clocks += 1) begin
-      @(negedge tb_clk);
-    end
+    //tb_parallel_data_in = 32'hFAAAAAA0;
+    //for (tb_clocks = 0; tb_clocks < 32; tb_clocks += 1) begin
+      //@(negedge tb_clk);
+    //end
     for (tb_test_case = 1; tb_test_case < MAX_VAL; tb_test_case += 1) begin
       tb_parallel_data_in = {tb_test_case, tb_test_case};
       for (tb_clocks = 0; tb_clocks < 32; tb_clocks += 1) begin
         @(negedge tb_clk);
       end
+      tb_parallel_data_out = {tb_left_channel, tb_right_channel};
       if (tb_parallel_data_out == tb_parallel_data_in) begin
         $info("Test Vector %0d:: PASSED", tb_test_case);
       end

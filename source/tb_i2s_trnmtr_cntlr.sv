@@ -36,10 +36,10 @@ module tb_i2s_trnmtr_cntlr();
                               
   initial begin
     tb_edge_detected = 1'b1;
-    tb_n_rst = 1'b1;
+    tb_n_rst = 1'b0;
     //tb_clear = 1'b1;
-    //@(negedge tb_clk)
-    //tb_clear = 1'b0;
+    @(negedge tb_clk)
+    tb_n_rst = 1'b1;
     for (tb_cycles = 0; tb_cycles < MAX_CYCLES; tb_cycles += 1) begin
       @(negedge tb_clk);
     end
