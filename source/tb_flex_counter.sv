@@ -38,12 +38,11 @@ module tb_flex_counter();
                         .rollover_flag(tb_flag));
   
   initial begin
+    tb_n_rst = 1'b0;
+    @(posedge tb_clk);
     tb_n_rst = 1'b1;
     tb_enable = 1'b1;
     tb_clear = 1'b0;
     tb_sample_rollover = 6'b100000;
-    for(tb_test_vector = 0; tb_test_vector < CYCLES; tb_test_vector += 1) begin
-      @(posedge tb_clk);
-    end
   end
 endmodule
