@@ -85,7 +85,7 @@ module sram_controller(
         next_st = write;
 
       write:
-        next_st = write_full
+        next_st = write_full;
 
       write_full:
         next_st = idle;
