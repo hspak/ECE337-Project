@@ -50,13 +50,13 @@ module tb_i2s_trnmtr();
     tb_n_rst = 1'b0;
     @(negedge tb_clk);
     tb_n_rst = 1'b1;
-    //tb_parallel_data_in = 32'hFAAAAAA0;
-    //for (tb_clocks = 0; tb_clocks < 32; tb_clocks += 1) begin
-      //@(negedge tb_clk);
-    //end
+    tb_parallel_data_in = 32'hFAAAAAA0;
+    for (tb_clocks = 0; tb_clocks < 34; tb_clocks += 1) begin
+      @(negedge tb_clk);
+    end
     for (tb_test_case = 1; tb_test_case < MAX_VAL; tb_test_case += 1) begin
-      tb_parallel_data_in = {tb_test_case, tb_test_case};
-      for (tb_clocks = 0; tb_clocks < 32; tb_clocks += 1) begin
+      tb_parallel_data_in = {tb_test_case, tb_test_case + 2'b11};
+      for (tb_clocks = 0; tb_clocks < 34; tb_clocks += 1) begin
         @(negedge tb_clk);
       end
       tb_parallel_data_out = {tb_left_channel, tb_right_channel};

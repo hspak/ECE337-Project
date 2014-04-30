@@ -26,7 +26,7 @@ module i2s_trnmtr_shift_reg(
                                      .serial_out(data_out));
   
   always_comb begin
-    if (wsd) begin
+    if (!wsd) begin
       data = data_left;
     end
     else begin

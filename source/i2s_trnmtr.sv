@@ -17,6 +17,7 @@ module i2s_trnmtr(
   reg ws;
   reg wsd;
   reg edge_detected;
+  reg start;
   //reg shift;
   //reg load;
   reg [15:0] data_left;
@@ -32,7 +33,8 @@ module i2s_trnmtr(
                                           
   i2s_trnmtr_cntlr CONTROLLER (.clk(clk),
                                 .n_rst(n_rst),
-                                .ws(ws));
+                                .ws(ws),
+                                .start(start));
   
   i2s_trnmtr_double_reg CHANNEL_REGISTERS(.clk(clk),
                                           .n_rst(n_rst),
@@ -42,8 +44,8 @@ module i2s_trnmtr(
                                 
   i2s_trnmtr_shift_reg SHIFT_REGISTER (.clk(!clk),
                                         .n_rst(n_rst),
-                                        .shift(!edge_detected),
-                                        .load(edge_detected),
+                                        .shift(!start & !edge_detected),
+                                        .load(start | edge_detected),
                                         .wsd(wsd),
                                         .data_left(data_left),
                                         .data_right(data_right),

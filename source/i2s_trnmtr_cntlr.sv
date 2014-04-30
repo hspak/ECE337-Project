@@ -9,7 +9,8 @@
 module i2s_trnmtr_cntlr(
   input wire clk,
   input wire n_rst,
-  output wire ws);
+  output wire ws,
+  output wire start);
   
   reg clear = 1'b0;
   reg enable = 1'b1;
@@ -20,6 +21,7 @@ module i2s_trnmtr_cntlr(
   reg ws_switch;
   reg ws_current;
   reg ws_next;
+  reg start_flag;
   //reg [5:0] count_out_1;
   reg [4:0] count_out_2;
   
@@ -27,6 +29,7 @@ module i2s_trnmtr_cntlr(
   //reg load_flag;
   
   assign ws = ws_current;
+  assign start = start_flag;
   //assign shift = shift_flag;
   //assign load = load_flag;
   /*
@@ -49,7 +52,7 @@ module i2s_trnmtr_cntlr(
   //switch ws
   always_ff @ (posedge clk, negedge n_rst) begin
     if(!n_rst) begin
-      ws_current <= 1'b0;
+      ws_current <= 1'b0; //been toggling this back and forth
     end
     else begin
       ws_current <= ws_next;
@@ -57,11 +60,22 @@ module i2s_trnmtr_cntlr(
   end
   
   always_comb begin
-    if(ws_switch) begin
+    if(ws_switch) begin //or is a hail marry | (count_out_2 == 6'b000000)
+      clear = 1'b1;
       ws_next = !ws_current;
     end
     else begin
+      clear = 1'b0;
       ws_next = ws_current;
+    end
+  end
+  
+  always_comb begin
+    if(count_out_2 == 6'b000001) begin
+      start_flag = 1'b1;
+    end
+    else begin
+      start_flag = 1'b0;
     end
   end
   /*                                   
