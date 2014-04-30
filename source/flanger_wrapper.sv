@@ -13,8 +13,7 @@ module flanger_wrapper(
   input wire [31:0] input_data,
   output reg [31:0] output_data,
 
-  input wire memclk,
-  input wire memclr,
+  input wire mem_clr,
   input wire mem_init,
   input wire mem_dump
 );
@@ -50,10 +49,10 @@ module flanger_wrapper(
   );
 
   sram_controller RAMC(
-    .clk(memclk),
+    .clk(clk),
     .n_rst(n_rst),
     .rw_trigger(sram_rw),
-    .mem_clr(memclr),
+    .mem_clr(mem_clr),
     .mem_init(mem_init),
     .mem_dump(mem_dump),
     .write_data(input_data),

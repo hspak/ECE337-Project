@@ -5,7 +5,7 @@
 // Lab Section: 337-04
 // Version:     1.0  Initial Design Entry
 // Description: .
-`timescale 1ns / 10ps
+`timescale 1ns / 100ps
 
 // 1.4112 MHz
 
@@ -18,7 +18,7 @@ module tb_flanger();
   reg [31:0] tb_input_data;
   reg [31:0] tb_output_data;
   
-  reg tb_memclr;
+  reg tb_mem_clr;
   reg tb_mem_init;
   reg tb_mem_dump;
 
@@ -28,8 +28,7 @@ module tb_flanger();
     .flanger_en(tb_flanger_en),
     .input_data(tb_input_data),
     .output_data(tb_output_data),
-    .memclk(tb_clk),
-    .memclr(tb_memclr),
+    .mem_clr(tb_mem_clr),
     .mem_init(tb_mem_init),
     .mem_dump(tb_mem_dump)
   );
@@ -49,7 +48,7 @@ module tb_flanger();
     tb_test_case = 0;
     tb_n_rst = 1'b0;
 
-    tb_memclr = 0;
+    tb_mem_clr = 0;
     tb_mem_init = 0;
     tb_mem_dump = 0;
 
@@ -57,10 +56,10 @@ module tb_flanger();
     tb_input_data = 32'h99991111;
     @(posedge tb_clk);
 
-    tb_memclr = 1'b1;
+    // pulse the mem clear
+    tb_mem_clr = 1'b1;
     @(posedge tb_clk);
-
-    tb_memclr = 0;
+    tb_mem_clr = 0;
     @(posedge tb_clk);
 
     // begin
