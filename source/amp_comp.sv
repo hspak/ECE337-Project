@@ -59,6 +59,11 @@ module amp_comp(
     wire [15:0] C_opp_sign; //Flipped sign of C_raw
     wire [15:0] D_opp_sign; //Flipped sign of D_raw
 
+    wire [15:0] A_est;
+    wire [15:0] B_est;
+    wire [15:0] C_est;
+    wire [15:0] D_est;
+
     wire [15:0] A; //Absolute value of first register
     wire [15:0] B; //Absolute value of second register
     wire [15:0] C; //Absolute value of third register
@@ -71,19 +76,23 @@ module amp_comp(
 
     //Get absolute value of first buffer
     cla_16bit ABSA(.a(~A_raw), .b({16{1'b0}}), .cin(1'b1), .sum(A_opp_sign)); //get opposite sign of input
-    assign A=A_raw[15]?A_opp_sign:A_raw; //get the positive version of the input
+    assign A_est=A_raw[15]?A_opp_sign:A_raw; //get the positive version of the input
+    assign A=A_est[15]?16'b0111111111111111:A_est;
 
     //Get absolute value of second buffer
     cla_16bit ABSB(.a(~B_raw), .b({16{1'b0}}), .cin(1'b1), .sum(B_opp_sign)); //get opposite sign of input
-    assign B=B_raw[15]?B_opp_sign:B_raw; //get the positive version of the input
+    assign B_est=B_raw[15]?B_opp_sign:B_raw; //get the positive version of the input
+    assign B=B_est[15]?16'b0111111111111111:B_est;
 
     //Get absolute value of third buffer
     cla_16bit ABSC(.a(~C_raw), .b({16{1'b0}}), .cin(1'b1), .sum(C_opp_sign)); //get opposite sign of input
-    assign C=C_raw[15]?C_opp_sign:C_raw; //get the positive version of the input
+    assign C_est=C_raw[15]?C_opp_sign:C_raw; //get the positive version of the input
+    assign C=C_est[15]?16'b0111111111111111:C_est;
 
     //Get absolute value of fourth buffer
     cla_16bit ABSD(.a(~D_raw), .b({16{1'b0}}), .cin(1'b1), .sum(D_opp_sign)); //get opposite sign of input
-    assign D=D_raw[15]?D_opp_sign:D_raw; //get the positive version of the input
+    assign D_est=D_raw[15]?D_opp_sign:D_raw; //get the positive version of the input
+    assign D=D_est[15]?16'b0111111111111111:D_est;
 
     cla_16bit A2(.a(A), .b(~B), .cin(1'b1), .sum(AcmpB)); //get A-B
     cla_16bit A3(.a(C), .b(~D), .cin(1'b1), .sum(CcmpD)); //get C-D
