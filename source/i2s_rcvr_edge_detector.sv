@@ -29,7 +29,7 @@ module i2s_rcvr_edge_detector(
   end
   
   //Second flip-flop
-  always_ff @ (posedge clk, negedge n_rst) begin
+  always_ff @ (negedge clk, negedge n_rst) begin
     if(n_rst == 1'b0) begin
       ff_out_2 <= 1'b0;
     end
