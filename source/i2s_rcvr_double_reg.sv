@@ -15,6 +15,8 @@ module i2s_rcvr_double_reg(
   output wire [15:0] data_left,
   output wire [15:0] data_right);
   
+  //reg wsd2;
+  //reg wsp2;
   reg [15:0] ff_left;
   reg [15:0] ff_right;
   reg [15:0] new_left;
@@ -22,6 +24,9 @@ module i2s_rcvr_double_reg(
   
   assign data_left = ff_left;
   assign data_right = ff_right;
+  
+  assign wsd2 = wsd;
+  assign wsp2 = wsp;
   
   always_ff @ (posedge clk, negedge n_rst) begin
     if (!n_rst) begin
@@ -41,8 +46,11 @@ module i2s_rcvr_double_reg(
     end
   end
   
+  assign new_left = (wsd & wsp)?data_in:ff_left;
+  assign new_right = (!wsd & wsp)?data_in:ff_right;
+  /*
   always_comb begin
-    if (!wsd & wsp) begin
+    if (!wsd2 & wsp2) begin
       new_left = data_left;
     end
     else begin
@@ -51,12 +59,12 @@ module i2s_rcvr_double_reg(
   end
   
   always_comb begin
-    if (wsd & wsp) begin
+    if (wsd2 & wsp2) begin
       new_right = data_right;
     end
     else begin
       new_right = ff_right;
     end
   end
-  
+  */
 endmodule
