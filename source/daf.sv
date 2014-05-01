@@ -121,12 +121,12 @@ module daf(
 
   amp_clip AMPCLP1(
       .inchan(tb_parallel_buf_ampclp[31:16]),
-      .comp_in(pot_amp),
+      .comp_in(pot_amp_clp),
       .outchan(tb_parallel_ampclp_out[31:16])
   );
   amp_clip AMPCLP2(
       .inchan(tb_parallel_buf_ampclp[15:0]),
-      .comp_in(pot_amp),
+      .comp_in(pot_amp_clp),
       .outchan(tb_parallel_ampclp_out[15:0])
   );
 

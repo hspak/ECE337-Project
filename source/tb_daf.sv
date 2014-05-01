@@ -74,7 +74,7 @@ module tb_daf();
     pot_vol = 4'b1111;
     pot_amp_com = 4'b1111;
     pot_amp_clp = 4'b1111;
-    swch_mode_en = 4'b1001;
+    swch_mode_en = 4'b1000;
 
     mem_clr = 1'b0;
     mem_init = 1'b0;
