@@ -52,7 +52,7 @@ module daf(
   // reg [31:0] tb_parallel_buf_trns;
 
   // temporary out
-  assign temp_out = tb_parallel_fad;
+  assign temp_out = tb_parallel_vol;
 
   // enables for amp clp/amp com
   assign tb_parallel_ampclp = (swch_mode_en[2] ? tb_parallel_ampclp_out : tb_parallel_buf_ampclp);
@@ -84,87 +84,87 @@ module daf(
     .output_data(tb_parallel_vol[15:0])
   );
 
-  flex_buffer #(32) BFLANG(
-    .clk(tb_clk_div),
-    .n_rst(tb_n_rst),
-    .input_data(tb_parallel_vol),
-    .output_data(tb_parallel_buf_flang)
-  );
+  // flex_buffer #(32) BFLANG(
+    // .clk(tb_clk_div),
+    // .n_rst(tb_n_rst),
+    // .input_data(tb_parallel_vol),
+    // .output_data(tb_parallel_buf_flang)
+  // );
 
-  flanger FLANG(
-    .clk(tb_clk),
-    .n_rst(tb_n_rst),
-    .flanger_en(swch_mode_en[3]),
-    .shift_en(tb_shift_en),
-    .input_data(tb_parallel_buf_flang),
-    .read_data(sram_read_data),
-    .output_data(tb_parallel_flang),
-    .sram_rw(sram_rw)
-  );
-  sram_controller SRAMC(
-    .clk(tb_clk),
-    .n_rst(n_rst),
-    .rw_trigger(sram_rw),
-    .mem_clr(mem_clr),
-    .mem_init(mem_init),
-    .mem_dump(mem_dump),
-    .write_data(tb_parallel_buf_flang), // direct input to sram also
-    .sram_data(sram_read_data)
-  );
+  // flanger FLANG(
+    // .clk(tb_clk),
+    // .n_rst(tb_n_rst),
+    // .flanger_en(swch_mode_en[3]),
+    // .shift_en(tb_shift_en),
+    // .input_data(tb_parallel_buf_vol),
+    // .read_data(sram_read_data),
+    // .output_data(tb_parallel_flang),
+    // .sram_rw(sram_rw)
+  // );
+  // sram_controller SRAMC(
+    // .clk(tb_clk),
+    // .n_rst(n_rst),
+    // .rw_trigger(sram_rw),
+    // .mem_clr(mem_clr),
+    // .mem_init(mem_init),
+    // .mem_dump(mem_dump),
+    // .write_data(tb_parallel_buf_vol), // direct input to sram also
+    // .sram_data(sram_read_data)
+  // );
 
-  flex_buffer #(32) BAMPCLP(
-    .clk(tb_clk_div),
-    .n_rst(tb_n_rst),
-    .input_data(tb_parallel_flang),
-    .output_data(tb_parallel_buf_ampclp)
-  );
+  // flex_buffer #(32) BAMPCLP(
+    // .clk(tb_clk_div),
+    // .n_rst(tb_n_rst),
+    // .input_data(tb_parallel_flang),
+    // .output_data(tb_parallel_buf_ampclp)
+  // );
 
-  amp_clip AMPCLP1(
-      .inchan(tb_parallel_buf_ampclp[31:16]),
-      .comp_in(pot_amp_clp),
-      .outchan(tb_parallel_ampclp_out[31:16])
-  );
-  amp_clip AMPCLP2(
-      .inchan(tb_parallel_buf_ampclp[15:0]),
-      .comp_in(pot_amp_clp),
-      .outchan(tb_parallel_ampclp_out[15:0])
-  );
+  // amp_clip AMPCLP1(
+      // .inchan(tb_parallel_buf_ampclp[31:16]),
+      // .comp_in(pot_amp_clp),
+      // .outchan(tb_parallel_ampclp_out[31:16])
+  // );
+  // amp_clip AMPCLP2(
+      // .inchan(tb_parallel_buf_ampclp[15:0]),
+      // .comp_in(pot_amp_clp),
+      // .outchan(tb_parallel_ampclp_out[15:0])
+  // );
 
-  flex_buffer #(32) BAMPCOMP(
-    .clk(tb_clk_div),
-    .n_rst(tb_n_rst),
-    .input_data(tb_parallel_ampclp),
-    .output_data(tb_parallel_buf_ampcom)
-  );
+  // flex_buffer #(32) BAMPCOMP(
+    // .clk(tb_clk_div),
+    // .n_rst(tb_n_rst),
+    // .input_data(tb_parallel_buf_ampclp),
+    // .output_data(tb_parallel_buf_ampcom)
+  // );
 
-  amp_comp AMPCMP1(
-    .clk(tb_clk),
-    .n_rst(tb_n_rst),
-    .inchan(tb_parallel_buf_ampcom[31:16]),
-    .in_thresh(pot_amp_com),
-    .outchan(tb_parallel_ampcom_out[31:16])
-  );
-  amp_comp AMPCMP2(
-    .clk(tb_clk),
-    .n_rst(tb_n_rst),
-    .inchan(tb_parallel_buf_ampcom[15:0]),
-    .in_thresh(pot_amp_com),
-    .outchan(tb_parallel_ampcom_out[15:0])
-  );
+  // amp_comp AMPCMP1(
+    // .clk(tb_clk),
+    // .n_rst(tb_n_rst),
+    // .inchan(tb_parallel_buf_ampcom[31:16]),
+    // .in_thresh(pot_amp_com),
+    // .outchan(tb_parallel_ampcom_out[31:16])
+  // );
+  // amp_comp AMPCMP2(
+    // .clk(tb_clk),
+    // .n_rst(tb_n_rst),
+    // .inchan(tb_parallel_buf_ampcom[15:0]),
+    // .in_thresh(pot_amp_com),
+    // .outchan(tb_parallel_ampcom_out[15:0])
+  // );
   
-  flex_buffer #(32) BFAD(
-    .clk(tb_clk_div),
-    .n_rst(tb_n_rst),
-    .input_data(tb_parallel_ampcom),
-    .output_data(tb_parallel_buf_fad)
-  );
+  // flex_buffer #(32) BFAD(
+    // .clk(tb_clk_div),
+    // .n_rst(tb_n_rst),
+    // .input_data(tb_parallel_buf_ampcom),
+    // .output_data(tb_parallel_buf_fad)
+  // );
 
-  fader FAD(
-    .clk(tb_clk),
-    .n_reset(tb_n_rst),
-    .clear(1'b0),
-    .fad_enable(swch_mode_en[0]),
-    .signal_in(tb_parallel_buf_fad),
-    .signal_out(tb_parallel_fad)
-  );  
+  // fader FAD(
+    // .clk(tb_clk),
+    // .n_reset(tb_n_rst),
+    // .clear(1'b0),
+    // .fad_enable(swch_mode_en[0]),
+    // .signal_in(tb_parallel_buf_fad),
+    // .signal_out(tb_parallel_fad)
+  // );  
 endmodule

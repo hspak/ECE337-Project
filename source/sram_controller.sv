@@ -39,7 +39,7 @@ module sram_controller(
     .mem_clr(mem_clr),
     .mem_init(mem_init),
     .mem_dump(mem_dump),
-    .verbose(1'b1),
+    .verbose(1'b0), // slow!
     .start_address(START_ADDR),
     .last_address(LAST_ADDR),
     .read_enable(r_en),
@@ -72,7 +72,7 @@ module sram_controller(
       w_addr <= 16'h0000;
       read_data <= 32'h00000000;
     end else if (r_addr == LAST_ADDR) begin
-      r_addr <= 16'h0010;
+      r_addr <= 16'h0000;
     end else if (w_addr == LAST_ADDR) begin
       w_addr <= 16'h0000;
     end else begin
@@ -141,7 +141,7 @@ module sram_controller(
         next_w_addr = w_addr;
         next_r_addr = r_addr;
         next_address = r_addr; // give read address
-        next_read_data = 32'b0; // maybe it does
+        next_read_data = read_data; // maybe it does
         write_data_half = 16'b0;
       end
 
@@ -161,7 +161,7 @@ module sram_controller(
         next_w_addr = w_addr;     
         next_r_addr = r_addr;
         next_address = r_addr; // ready with new address
-        next_read_data = 32'b0;
+        next_read_data = read_data; // save!
         write_data_half = 16'b0;
       end
 
@@ -182,7 +182,7 @@ module sram_controller(
         next_r_addr = r_addr;
         next_address = w_addr;
         next_read_data = read_data; // just save
-        write_data_half = write_data[15:0];
+        write_data_half = write_data[31:16];
       end
 
       write_wait: begin
@@ -202,7 +202,7 @@ module sram_controller(
         next_r_addr = r_addr;
         next_address = address;
         next_read_data = read_data; // just save
-        write_data_half = write_data[31:16];
+        write_data_half = write_data[15:0];
       end
     endcase
   end
