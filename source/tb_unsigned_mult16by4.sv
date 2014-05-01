@@ -1,12 +1,12 @@
 // $Id: $
-// File name:   tb_mult16by4.sv
+// File name:   tb_unsigned_mult16by4.sv
 // Created:     4/23/2014
 // Author:      Brian Rybarczyk
 // Lab Section: 337-04
 // Version:     1.0  Initial Design Entry
 // Description: tb
 `timescale 1ns / 100ps
-module tb_mult16by4;
+module tb_unsigned_mult16by4;
     // Inputs
     reg [15:0] A;
     reg [3:0] B;
@@ -14,10 +14,10 @@ module tb_mult16by4;
     // Outputs
     reg [19:0] product;
 
-    reg [19:0] expected=A*B;
+    int expected=A*B;
 
     // Instantiate the Unit Under Test (UUT)
-    mult16by4 DUT(
+    unsigned_mult16by4 DUT(
     .a(A),
     .b(B),
     .product(product)
