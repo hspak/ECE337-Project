@@ -17,7 +17,7 @@ module tb_daf();
   // input
   reg tb_clk;
   reg tb_n_rst;
-  // reg tb_serial_input;
+  reg tb_serial_input;
 
   // external
   reg [3:0] pot_vol;
@@ -45,7 +45,7 @@ module tb_daf();
   integer i;
 
   // output
-  // reg tb_serial_output;
+  reg tb_serial_output;
 
   daf DAFF(
     .tb_clk(tb_clk),
@@ -58,7 +58,9 @@ module tb_daf();
     // .temp_out(temp_out),
     .mem_clr(mem_clr),
     .mem_init(mem_init),
-    .mem_dump(mem_dump)
+    .mem_dump(mem_dump),
+    .serial_data_in(tb_serial_data_input),
+    .serial_data_out(tb_serial_output)
   );
 
   always begin
@@ -70,7 +72,7 @@ module tb_daf();
 
   initial begin
     tb_n_rst = 1'b0;
-    // tb_serial_input = 1'b0;
+    tb_serial_input = 1'b0;
     pot_vol = 4'b1010;
     pot_amp_com = 4'b1111;
     pot_amp_clp = 4'b1111;

@@ -152,6 +152,7 @@ module sram_controller(
         next_r_addr = r_addr + 16; // increment next since we've read
         next_address = r_addr;
         next_read_data[31:16] = read_data_half; // data from sram yay
+        next_read_data[15:0] = read_data[15:0]; // data from sram yay
         write_data_half = 16'b0;
       end
 
@@ -172,6 +173,7 @@ module sram_controller(
         next_r_addr = r_addr + 16; // inc
         next_address = w_addr;
         next_read_data[15:0] = read_data_half; // data from sram yay
+        next_read_data[31:16] = read_data[15:0]; // data from sram yay
         write_data_half = 16'b0; 
       end
 
@@ -203,6 +205,19 @@ module sram_controller(
         next_address = address;
         next_read_data = read_data; // just save
         write_data_half = write_data[15:0];
+      end
+
+      default: begin
+        r_en = 1'b0;
+        w_en = 1'b0;
+
+        // save these states during idle
+        next_r_addr = r_addr;
+        next_w_addr = w_addr;
+        next_address = address;
+        next_read_data = read_data;
+
+        write_data_half = 16'b0; // reset write data 
       end
     endcase
   end
