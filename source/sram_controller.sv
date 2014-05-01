@@ -17,7 +17,7 @@ module sram_controller(
   output wire [31:0] sram_data
 );
   localparam START_ADDR = 16'b0;
-  localparam LAST_ADDR = 16'h1b90;
+  localparam LAST_ADDR = 16'h1b90; // number of cycles for 5 ms
 
   reg r_en;
   reg w_en;
@@ -59,7 +59,7 @@ module sram_controller(
     read_full,
     write,
     write_wait,
-    write_full,
+    write_full
     // write_full_setup not needed since it goes to idle anyway
   } state;
 
@@ -141,10 +141,10 @@ module sram_controller(
       read_setup: begin
         r_en = 1'b0;
         w_en = 1'b0;
-        next_r_addr = w_addr;
+        next_w_addr = w_addr;
         next_r_addr = r_addr;
         next_address = r_addr; // give read address
-        next_read_data[31:16] = read_data_half; // doesn't hurt to be early
+        next_read_data = 32'b0; // maybe it does
         write_data_half = 16'b0;
         manual = 1'b0;
       end
@@ -152,7 +152,7 @@ module sram_controller(
       read: begin
         r_en = 1'b1; // start SRAM read
         w_en = 1'b0;
-        next_r_addr = w_addr;
+        next_w_addr = w_addr;
         next_r_addr = r_addr + 16; // increment next since we've read
         next_address = r_addr;
         next_read_data[31:16] = read_data_half; // data from sram yay
@@ -163,22 +163,22 @@ module sram_controller(
       read_full_setup: begin
         r_en = 1'b0;
         w_en = 1'b0;
-        next_r_addr = w_addr;     
+        next_w_addr = w_addr;     
         next_r_addr = r_addr;
         next_address = r_addr; // ready with new address
+        next_read_data = 32'b0;
         write_data_half = 16'b0;
-        next_read_data[31:16] = read_data_half; // early again
         manual = 1'b0;
       end
 
       read_full: begin
         r_en = 1'b1; // reading
         w_en = 1'b0;
-        next_r_addr = w_addr;
+        next_w_addr = w_addr;
         next_r_addr = r_addr + 16; // inc
         next_address = w_addr;
-        next_read_data[31:16] = read_data_half; // data from sram yay
-        write_data_half = write_data[15:0]; // just have it ready
+        next_read_data[15:0] = read_data_half; // data from sram yay
+        write_data_half = 16'b0; 
         manual = 1'b0;
       end
 
@@ -196,11 +196,11 @@ module sram_controller(
       write_wait: begin
         r_en = 1'b0;
         w_en = 1'b0; // needs to be asserted low after finished
-        next_r_addr = w_addr;
+        next_w_addr = w_addr;
         next_r_addr = r_addr;
         next_address = w_addr;
         next_read_data = read_data; // just save
-        write_data_half = write_data[31:16]; // just have it ready
+        write_data_half = 16'h0;
         manual = 1'b0;
       end
 
