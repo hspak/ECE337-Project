@@ -117,7 +117,7 @@ module amp_comp(
     wire [15:0] out_pos_val;
     wire [15:0] out_neg_val;
     cla_16bit A6(.a(reg_4_out), .b(~modifier), .cin(1'b1), .sum(out_pos_val));
-    cla_16bit A7(.a(reg_4_out), .b(modifier), .cin(0'b0), .sum(out_neg_val));
+    cla_16bit A7(.a(reg_4_out), .b(modifier), .cin(1'b0), .sum(out_neg_val));
     assign outchan=reg_4_out[15]?out_neg_val:out_pos_val;
     //wire [15:0] out_abs_val;
     //cla_16bit A6(.a(D), .b(~modifier), .cin(1'b1), .sum(out_abs_val)); //subtract modifier from version of output reg
