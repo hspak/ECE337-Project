@@ -19,10 +19,12 @@ module mult16by4(
   reg [18:0] sums [2:0];
   wire couts[7:0];
   wire[15:0] in_abs_val;
+  wire[15:0] in_est_val;
   wire[15:0] in_opp_sign;
   
   cla_16bit AOPS1(.a(~a), .b({16{1'b0}}), .cin(1'b1), .sum(in_opp_sign));
-  assign in_abs_val=a[15]?in_opp_sign:a;
+  assign in_est_val=a[15]?in_opp_sign:a;
+  assign in_abs_val=in_est_val[15]?16'b0111111111111111:in_est_val;
 
   assign ab0={1'b0,in_abs_val & {16{b[0]}}};
   assign ab1={(in_abs_val & {16{b[1]}}),1'b0};

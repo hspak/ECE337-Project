@@ -30,7 +30,7 @@ module tb_amp_comp;
     );
     
     int i; //loop control variable
-    
+
     //initialize input vector
     reg [15:0] input_vec [INPUT_NUM-1:0];
     assign input_vec[0]=16'hbb40;
@@ -48,7 +48,7 @@ module tb_amp_comp;
         tb_clk = 1'b0;
         #(CLK_PERIOD/2);
     end
-
+/*
   initial begin
     // Initialize Inputs
     tb_input = 0;  tb_thresh = 0; tb_n_rst = 1;
@@ -63,6 +63,20 @@ module tb_amp_comp;
       @(negedge tb_clk)
       tb_input=input_vec[i];
       
+    end
+  end
+*/
+  initial begin
+    tb_input=0; tb_thresh=0; tb_n_rst=1;
+    #10
+    tb_n_rst=0;
+    #5
+    tb_n_rst=1;
+    #(2*CLK_PERIOD)
+    tb_thresh=4'b1010;
+    for(i=-32768;i<=32767;i++) begin
+      @(negedge tb_clk)
+      tb_input=i;
     end
   end
         
