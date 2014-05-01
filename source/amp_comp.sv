@@ -42,27 +42,27 @@ module amp_comp(
 
 
     /* Get Max */
-    wire [15:0] AcmpB;
-    wire [15:0] CcmpD;
-    wire [15:0] diff1;
-    wire [15:0] ABmax;
-    wire [15:0] CDmax;
-    wire [15:0] max;
+    wire [15:0] AcmpB; //Result of A-B
+    wire [15:0] CcmpD; //Result of C-D
+    wire [15:0] diff1; //Result of ABmax-CDmax
+    wire [15:0] ABmax; //Max value between A and B
+    wire [15:0] CDmax; //Max value between C and D
+    wire [15:0] max;   //Overall max value between A,B,C, and D
 
-    wire [15:0] A_raw;
-    wire [15:0] B_raw;
-    wire [15:0] C_raw;
-    wire [15:0] D_raw;
+    wire [15:0] A_raw; //Raw value from first register
+    wire [15:0] B_raw; //Raw value from second register
+    wire [15:0] C_raw; //Raw value from third register
+    wire [15:0] D_raw; //Raw value from fourth register
 
-    wire [15:0] A_opp_sign;
-    wire [15:0] B_opp_sign;
-    wire [15:0] C_opp_sign;
-    wire [15:0] D_opp_sign;
+    wire [15:0] A_opp_sign; //Flipped sign of A_raw
+    wire [15:0] B_opp_sign; //Flipped sign of B_raw
+    wire [15:0] C_opp_sign; //Flipped sign of C_raw
+    wire [15:0] D_opp_sign; //Flipped sign of D_raw
 
-    wire [15:0] A;
-    wire [15:0] B;
-    wire [15:0] C;
-    wire [15:0] D;
+    wire [15:0] A; //Absolute value of first register
+    wire [15:0] B; //Absolute value of second register
+    wire [15:0] C; //Absolute value of third register
+    wire [15:0] D; //Absolute value of fourth register
 
     assign A_raw=reg_1_out;
     assign B_raw=reg_2_out;
@@ -96,8 +96,9 @@ module amp_comp(
     assign max = diff1[15]?CDmax:ABmax; //take the max based on the sign of the reult
 
     /* Compression Block */
-    wire [15:0] diff2;
-    wire [19:0] product;
+
+    wire [15:0] diff2; //result of max-threshold
+    wire [19:0] product; //product of D and the usigned most significant bits of diff2
     wire [15:0] modifier;
     wire enable;
 
@@ -107,20 +108,26 @@ module amp_comp(
     mult16by4 M1(.a(D), .b(diff2[14:11]), .product(product)); //multiply the 4 most significant non-sign bits by D (an absolute value)
 
     assign modifier = !enable?{16{1'b0}}:
-      (max[14]?{{14{1'b0}},product[19:18]}:
-      (max[13]?{{13{1'b0}},product[19:17]}:
-      (max[12]?{{12{1'b0}},product[19:16]}:
-      (max[11]?{{11{1'b0}},product[19:15]}:
+      (max[14]?{{11{1'b0}},product[19:15]}:
+      (max[13]?{{10{1'b0}},product[19:14]}:
+      (max[12]?{{9{1'b0}},product[19:13]}:
+      (max[11]?{{8{1'b0}},product[19:12]}:
       {16{1'b0}})))); //bit shift output based on max
 
-    wire [15:0] out_abs_val;
-    cla_16bit A6(.a(D), .b(~modifier), .cin(1'b1), .sum(out_abs_val));
-
+    wire [15:0] out_pos_val;
+    wire [15:0] out_neg_val;
+    cla_16bit A6(.a(reg_4_out), .b(~modifier), .cin(1'b1), .sum(out_pos_val));
+    cla_16bit A7(.a(reg_4_out), .b(modifier), .cin(0'b0), .sum(out_neg_val));
+    assign outchan=reg_4_out[15]?out_neg_val:out_pos_val;
+    //wire [15:0] out_abs_val;
+    //cla_16bit A6(.a(D), .b(~modifier), .cin(1'b1), .sum(out_abs_val)); //subtract modifier from version of output reg
+    //assign outchan =out_abs_val;
     /*Output positive or negative*/
-    wire [15:0] neg_sign_out;
-    cla_16bit A7(.a(~out_abs_val), .b({16{1'b0}}), .cin(1'b1), .sum(neg_sign_out));
 
-    assign outchan = reg_4_out[15]?neg_sign_out:out_abs_val;
+    //wire [15:0] neg_sign_out;
+    //cla_16bit A7(.a(~out_abs_val), .b({16{1'b0}}), .cin(1'b1), .sum(neg_sign_out)); //get negative version of output
+
+    //assign outchan = reg_4_out[15]?neg_sign_out:out_abs_val; //assign appropriately signed output
 
 
 endmodule
