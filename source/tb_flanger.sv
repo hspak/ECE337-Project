@@ -12,7 +12,7 @@
 module tb_flanger();
   localparam CLK_PERIOD = 708; // 708
 
-  localparam INPUT_FILE = "./raw";
+  localparam INPUT_FILE = "./raw1";
   localparam OUTPUT_FILE = "./outraw";
 
   reg tb_clk;
