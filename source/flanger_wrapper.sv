@@ -55,7 +55,7 @@ module flanger_wrapper(
     .mem_clr(mem_clr),
     .mem_init(mem_init),
     .mem_dump(mem_dump),
-    .write_data(input_data),
+    .write_data(output_buffer),
     .sram_data(read_data) // output
   );
 endmodule 
