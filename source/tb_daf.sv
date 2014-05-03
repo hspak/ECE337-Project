@@ -11,7 +11,7 @@
 module tb_daf();
   localparam CLK_PERIOD = 708;
 
-  localparam INPUT_FILE = "./raw1";
+  localparam INPUT_FILE = "./none.wav";
   localparam OUTPUT_FILE = "./outraw";
 
   // input
@@ -77,7 +77,10 @@ module tb_daf();
     pot_vol = 4'b0010;
     pot_amp_com = 4'b1010;
     pot_amp_clp = 4'b0010;
-    swch_mode_en = 4'b0000;
+    swch_mode_en[0] = 1'b0;//flanger
+    swch_mode_en[1] = 1'b0;//amp_clip
+    swch_mode_en[2] = 1'b0;//amp_comp
+    swch_mode_en[3] = 1'b0;//fader
 
     mem_clr = 1'b0;
     mem_init = 1'b0;

@@ -16,13 +16,23 @@ module flex_counter
 );
 
 reg r_flag;
+wire r_flag_next;
 reg [NUM_CNT_BITS-1:0] counter;
-//integer roll_reset_val = 1;
+integer roll_reset_val = 1;
 assign rollover_flag=r_flag;
 assign count_out=counter;
 
-always_comb begin
-  r_flag=(counter==rollover_val);
+
+assign r_flag_next=(counter==rollover_val);
+
+
+always_ff@(posedge clk, negedge n_rst) begin
+  if (n_rst==0) begin
+    r_flag=0;
+  end
+  else begin
+    r_flag=r_flag_next;
+  end
 end
 
 always_ff@(posedge clk, negedge n_rst) begin
@@ -36,7 +46,7 @@ always_ff@(posedge clk, negedge n_rst) begin
     if (r_flag) begin
       counter<=1;
     end
-    else if (counter == ((2**NUM_CNT_BITS)-1)) begin
+    else if (counter == (2**NUM_CNT_BITS-1)) begin
       counter<=1;
     end
     else begin
