@@ -43,7 +43,7 @@ always_ff@(posedge clk, negedge n_rst) begin
     counter<='0;
   end
   else if (count_enable==1) begin
-    if (r_flag) begin
+    if (r_flag_next) begin
       counter<=1;
     end
     else if (counter == (2**NUM_CNT_BITS-1)) begin
