@@ -11,13 +11,13 @@
 module tb_daf();
   localparam CLK_PERIOD = 708;
 
-  localparam INPUT_FILE = "./raw1";
+  localparam INPUT_FILE = "./raw";
   localparam OUTPUT_FILE = "./outraw";
 
   // input
   reg tb_clk;
   reg tb_n_rst;
-  // reg tb_serial_input;
+  reg tb_serial_input;
 
   // external
   reg [3:0] pot_vol;
@@ -32,7 +32,7 @@ module tb_daf();
   reg mem_dump;
 
   // intermmediate
-  // reg tb_sck;
+  //reg tb_sck;
   // reg tb_ws;
   // reg [31:0] tb_parallel_i2s;
 
@@ -50,18 +50,17 @@ module tb_daf();
   daf DAFF(
     .tb_clk(tb_clk),
     .tb_n_rst(tb_n_rst),
+    // .temp_in(temp_in),
     .pot_vol(pot_vol),
     .pot_amp_clp(pot_amp_clp),
     .pot_amp_com(pot_amp_com),
     .swch_mode_en(swch_mode_en),
-    .temp_in(temp_in),
-    .temp_out(temp_out),
+    // .temp_out(temp_out),
     .mem_clr(mem_clr),
     .mem_init(mem_init),
-    .mem_dump(mem_dump)
-
-    // .serial_data_in(tb_serial_input),
-    // .serial_data_out(tb_serial_output)
+    .mem_dump(mem_dump),
+    .serial_data_in(tb_serial_data_input),
+    .serial_data_out(tb_serial_output)
   );
 
   always begin
@@ -73,10 +72,10 @@ module tb_daf();
 
   initial begin
     tb_n_rst = 1'b0;
-    // tb_serial_input = 1'b0;
-    pot_vol = 4'b0010;
-    pot_amp_com = 4'b1010;
-    pot_amp_clp = 4'b0010;
+    tb_serial_input = 1'b0;
+    pot_vol = 4'b1010;
+    pot_amp_com = 4'b1111;
+    pot_amp_clp = 4'b1111;
     swch_mode_en = 4'b0000;
 
     mem_clr = 1'b0;

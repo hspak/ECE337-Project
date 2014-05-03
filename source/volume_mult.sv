@@ -19,5 +19,5 @@ module volume_mult(
     .product(buffer)
   );
 
-  assign output_data = (buffer >> 4);
+  assign output_data = buffer[19:4];
 endmodule
