@@ -13,16 +13,19 @@ module i2s_rcvr_input_cntlr(
   //input wire clear,
   output wire shift);
   
-  reg enable = 1'b1;
-  reg [4:0] sample_rollover = 5'b10001;
+  reg enable;
+  reg [4:0] sample_rollover;
   reg [4:0] count_out;
   reg data_ready;
   //reg shift_flag;
-  reg clear = 1'b0;
+  reg clear;
   reg shift_current;
   reg shift_next;
   
   assign shift = shift_current;
+  assign sample_rollover = 5'b10001;
+  assign clear = 1'b0;
+  assign enable = 1'b1;
   
   flex_counter # (5) EDGE_COUNTER_1    (.clk(!clk),
                                         .n_rst(n_rst),

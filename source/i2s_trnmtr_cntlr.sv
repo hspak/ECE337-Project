@@ -13,10 +13,10 @@ module i2s_trnmtr_cntlr(
   output wire start);
   
   reg clear = 1'b0;
-  reg enable = 1'b1;
+  //reg enable = 1'b1;
   //reg down_count_enable = 0;
   //reg [5:0] sample_rollover = 6'b100000;
-  reg [4:0] ws_rollover = 5'b10000;
+  //reg [4:0] ws_rollover = 5'b10000;
   //reg data_ready;
   reg ws_switch;
   reg ws_current;
@@ -44,8 +44,8 @@ module i2s_trnmtr_cntlr(
   flex_counter # (5) EDGE_COUNTER_2    (.clk(clk),
                                         .n_rst(n_rst),
                                         .clear(clear),
-                                        .count_enable(enable),
-                                        .rollover_val(ws_rollover),
+                                        .count_enable(1'b1),
+                                        .rollover_val(5'b10000),
                                         .count_out(count_out_2),
                                         .rollover_flag(ws_switch));
   
@@ -71,7 +71,7 @@ module i2s_trnmtr_cntlr(
   end
   
   always_comb begin
-    if(count_out_2 == 6'b000001) begin
+    if(count_out_2 == 5'b00001) begin
       start_flag = 1'b1;
     end
     else begin

@@ -17,7 +17,7 @@ module flex_counter
 
 reg r_flag;
 reg [NUM_CNT_BITS-1:0] counter;
-integer roll_reset_val = 1;
+//integer roll_reset_val = 1;
 assign rollover_flag=r_flag;
 assign count_out=counter;
 
@@ -36,7 +36,7 @@ always_ff@(posedge clk, negedge n_rst) begin
     if (r_flag) begin
       counter<=1;
     end
-    else if (counter == (2**NUM_CNT_BITS-1)) begin
+    else if (counter == ((2**NUM_CNT_BITS)-1)) begin
       counter<=1;
     end
     else begin

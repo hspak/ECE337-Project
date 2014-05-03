@@ -1,17 +1,16 @@
 // $Id: $
-// File name:   tb_flex_counter.sv
-// Created:     4/29/2014
+// File name:   tb_count_test_wrapper.sv
+// Created:     5/3/2014
 // Author:      Clarence Beutel
 // Lab Section: 337-04
 // Version:     1.0  Initial Design Entry
-// Description: Testing flex_counters
+// Description: Test Bench for Counter
 
 `timescale 1ns / 10ps
 
-module tb_flex_counter();
+module tb_count_test_wrapper();
   parameter CLK_PERIOD = 5;
   parameter CYCLES = 64;
-  localparam BITS = 6;
   
   reg tb_clk;
   reg tb_n_rst;
@@ -31,7 +30,7 @@ module tb_flex_counter();
     #(CLK_PERIOD/2);
   end
   
-  flex_counter #(BITS) COUNTER (.clk(tb_clk),
+  count_test_wrapper COUNTER (.clk(tb_clk),
                         .n_rst(tb_n_rst),
                         .clear(tb_clear),
                         .count_enable(tb_enable),

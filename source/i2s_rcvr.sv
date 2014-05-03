@@ -16,6 +16,7 @@ module i2s_rcvr(
   //output wire [15:0] right_channel);
   
   reg wsp;
+  reg wsd;
   reg shift;
   //reg [15:0] parallel_data;
   

@@ -14,10 +14,8 @@ module tb_i2s_trnmtr_cntlr();
   
   reg tb_clk;
   reg tb_n_rst;
-  reg tb_edge_detected;
-  reg tb_shift;
-  reg tb_load;
   reg tb_ws;
+  reg tb_start;
   integer tb_cycles;
   
   always begin
@@ -29,13 +27,10 @@ module tb_i2s_trnmtr_cntlr();
   
   i2s_trnmtr_cntlr CONTROLLER(.clk(tb_clk),
                               .n_rst(tb_n_rst),
-                              .edge_detected(tb_edge_detected),
-                              .shift(tb_shift),
-                              .load(tb_load),
-                              .ws(tb_ws));
+                              .ws(tb_ws),
+                              .start(tb_start));
                               
   initial begin
-    tb_edge_detected = 1'b1;
     tb_n_rst = 1'b0;
     //tb_clear = 1'b1;
     @(negedge tb_clk)
