@@ -33,10 +33,10 @@ module tb_amp_comp;
 
     //initialize input vector
     reg [15:0] input_vec [INPUT_NUM-1:0];
-    assign input_vec[0]=16'hbb40;
-    assign input_vec[1]=16'h9bd2;
-    assign input_vec[2]=16'h87ef;
-    assign input_vec[3]=16'h87b7;
+    assign input_vec[0]=16'hff00;
+    assign input_vec[1]=16'h7f00;
+    assign input_vec[2]=16'h88ff;
+    assign input_vec[3]=16'h38f0;
     assign input_vec[4]=16'h210f;
     assign input_vec[5]=16'hb100;
     assign input_vec[6]=16'haa00;
@@ -48,7 +48,7 @@ module tb_amp_comp;
         tb_clk = 1'b0;
         #(CLK_PERIOD/2);
     end
-/*
+
   initial begin
     // Initialize Inputs
     tb_input = 0;  tb_thresh = 0; tb_n_rst = 1;
@@ -65,7 +65,7 @@ module tb_amp_comp;
       
     end
   end
-*/
+/*
   initial begin
     tb_input=0; tb_thresh=0; tb_n_rst=1;
     #10
@@ -79,7 +79,7 @@ module tb_amp_comp;
       tb_input=i;
     end
   end
-        
+*/        
     // Add stimulus here
     
  
