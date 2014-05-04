@@ -44,10 +44,10 @@ always_ff@(posedge clk, negedge n_rst) begin
   end
   else if (count_enable==1) begin
     if (r_flag_next) begin
-      counter<=1;
+      counter<='0;
     end
     else if (counter == (2**NUM_CNT_BITS-1)) begin
-      counter<=1;
+      counter<='0;
     end
     else begin
       counter<=counter+1;
