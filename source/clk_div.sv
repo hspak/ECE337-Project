@@ -27,7 +27,7 @@ module clk_div(
   end
 
   always_comb begin
-    if (curr_c == 5'b10000) begin
+    if (curr_c == 5'b10001) begin
       next_c = 5'b0;
       clk_div_next = !clk_div;
       shift_en = clk_div;
