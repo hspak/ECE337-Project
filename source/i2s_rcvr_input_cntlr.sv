@@ -23,7 +23,7 @@ module i2s_rcvr_input_cntlr(
   reg shift_next;
   
   assign shift = shift_current;
-  assign sample_rollover = 5'b10001;
+  assign sample_rollover = 5'b10000;
   assign clear = 1'b0;
   assign enable = 1'b1;
   

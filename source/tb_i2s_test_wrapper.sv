@@ -32,28 +32,28 @@ module tb_i2s_test_wrapper();
   end
   
   initial begin
+    tb_parallel_data_in = 32'hFAAAAAA0;
     tb_n_rst = 1'b0;
-    @(negedge tb_clk);
+    @(posedge tb_clk);
     tb_n_rst = 1'b1;
     
-    tb_parallel_data_in = 32'hFAAAAAA0;
-    for (tb_clocks = 0; tb_clocks < 34; tb_clocks += 1) begin
-      @(negedge tb_clk);
+    for (tb_clocks = 0; tb_clocks < 28; tb_clocks += 1) begin
+      @(posedge tb_clk);
     end
     
     tb_parallel_data_in = 32'h80000001;
     for (tb_clocks = 0; tb_clocks < 34; tb_clocks += 1) begin
-      @(negedge tb_clk);
+      @(posedge tb_clk);
     end
   
     tb_parallel_data_in = 32'h1FFFFFF8;
     for (tb_clocks = 0; tb_clocks < 34; tb_clocks += 1) begin
-      @(negedge tb_clk);
+      @(posedge tb_clk);
     end
   
     tb_parallel_data_in = 32'hFBBBBBB0;
-    for (tb_clocks = 0; tb_clocks < 34; tb_clocks += 1) begin
-      @(negedge tb_clk);
+    for (tb_clocks = 0; tb_clocks < 40; tb_clocks += 1) begin
+      @(posedge tb_clk);
     end
   
     /*
