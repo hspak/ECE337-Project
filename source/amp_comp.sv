@@ -117,10 +117,10 @@ module amp_comp(
     unsigned_mult16by4 M1(.a(D), .b(diff2[14:11]), .product(product)); //multiply the 4 most significant non-sign bits by D (an absolute value)
 
     assign modifier = !enable?{16{1'b0}}:
-      (max[14]?{{11{1'b0}},product[19:15]}:
-      (max[13]?{{10{1'b0}},product[19:14]}:
-      (max[12]?{{9{1'b0}},product[19:13]}:
-      (max[11]?{{8{1'b0}},product[19:12]}:
+      (max[14]?{{4{1'b0}},product[19:8]}:
+      (max[13]?{{3{1'b0}},product[19:7]}:
+      (max[12]?{{2{1'b0}},product[19:6]}:
+      (max[11]?{{1{1'b0}},product[19:5]}:
       {16{1'b0}})))); //bit shift output based on max
 
     wire [15:0] out_pos_val;

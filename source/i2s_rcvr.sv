@@ -30,7 +30,8 @@ module i2s_rcvr(
                                         .n_rst(n_rst),
                                         //.clear(wsp),
                                         .shift(shift));
-                                        
+
+  //needs to shift on pos edge                                        
   i2s_rcvr_shift_reg SHIFT_REGISTER(.clk(!clk),
                                     .n_rst(n_rst),
                                     .shift(shift),

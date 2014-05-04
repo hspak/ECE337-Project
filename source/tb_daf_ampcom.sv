@@ -12,7 +12,7 @@ module tb_daf_ampcom();
   localparam CLK_PERIOD = 708;
 
   localparam INPUT_FILE = "./raw1";
-  localparam OUTPUT_FILE = "./outraw";
+  localparam OUTPUT_FILE = "./outraw_ampcom2";
 
   // input
   reg tb_clk;
@@ -47,7 +47,7 @@ module tb_daf_ampcom();
   // output
   reg tb_serial_output;
 
-  daf DAFF(
+  daf_ampcom DAFF(
     .tb_clk(tb_clk),
     .tb_n_rst(tb_n_rst),
     .pot_vol(pot_vol),
