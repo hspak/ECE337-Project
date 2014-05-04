@@ -23,3 +23,5 @@ work
 *.v
 *.rep
 Makefile
+
+*.wav
