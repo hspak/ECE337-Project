@@ -5,7 +5,7 @@
 // Lab Section: 337-04
 // Version:     1.0  Initial Design Entry
 // Description: top level
-module daf(
+module daf_ampcom(
 	   input reg tb_clk,
 	   input reg tb_n_rst,
 	   input reg [3:0] pot_vol,
@@ -162,7 +162,7 @@ module daf(
     .in_thresh(pot_amp_com),
     .outchan(tb_parallel_ampcom_out[15:0])
   );
-  
+
   // flex_buffer #(32) BFAD(
     // .clk(tb_clk_div),
     // .n_rst(tb_n_rst),
