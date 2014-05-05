@@ -17,8 +17,6 @@ module i2s_trnmtr(
   reg ws;
   reg wsd;
   reg edge_detected;
-  //reg start;
-  //reg shift;
   reg load;
   reg [15:0] data_left;
   reg [15:0] data_right;
@@ -45,7 +43,7 @@ module i2s_trnmtr(
   //needs to shift on neg edge                              
   i2s_trnmtr_shift_reg SHIFT_REGISTER (.clk(!clk),
                                         .n_rst(n_rst),
-                                        .shift(!load), //& !edge_detected
+                                        .shift(!load),
                                         .load(load),
                                         .wsd(ws),
                                         .data_left(data_left),

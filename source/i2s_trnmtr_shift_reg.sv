@@ -33,4 +33,5 @@ module i2s_trnmtr_shift_reg(
       data = data_right;
     end
   end
+  
 endmodule

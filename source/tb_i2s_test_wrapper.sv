@@ -16,7 +16,6 @@ module tb_i2s_test_wrapper();
   reg tb_n_rst;
   reg [15:0] tb_clocks;
   reg [31:0] tb_parallel_data_in;
-  //reg [15:0] tb_test_case;
   reg [31:0] tb_parallel_data_out;
   
   i2s_test_wrapper TEST_WRAPPER  (.clk(tb_clk),
@@ -55,21 +54,5 @@ module tb_i2s_test_wrapper();
     for (tb_clocks = 0; tb_clocks < 40; tb_clocks += 1) begin
       @(posedge tb_clk);
     end
-  
-    /*
-    for (tb_test_case = 1; tb_test_case < MAX_VAL; tb_test_case += 1) begin
-      tb_parallel_data_in = {tb_test_case, tb_test_case + 2'b11};
-      for (tb_clocks = 0; tb_clocks < 34; tb_clocks += 1) begin
-        @(negedge tb_clk);
-      end
-      tb_parallel_data_out = {tb_left_channel, tb_right_channel};
-      if (tb_parallel_data_out == tb_parallel_data_in) begin
-        $info("Test Vector %0d:: PASSED", tb_test_case);
-      end
-      else begin
-        $error("Test Vector %0d:: FAILED", tb_test_case);
-      end
-    end
-    */
   end
 endmodule

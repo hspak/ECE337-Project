@@ -12,13 +12,10 @@ module i2s_rcvr(
   input wire ws,
   input wire serial_data,
   output wire [31:0] parallel_data);
-  //output wire [15:0] left_channel,
-  //output wire [15:0] right_channel);
   
   reg wsp;
   reg wsd;
   reg shift;
-  //reg [15:0] parallel_data;
   
   i2s_trnmtr_edge_detector EDGE_DETECTOR (.clk(clk),
                                         .n_rst(n_rst),
@@ -28,22 +25,12 @@ module i2s_rcvr(
                                         
   i2s_rcvr_input_cntlr INPUT_CONTROLLER(.clk(clk),
                                         .n_rst(n_rst),
-                                        //.clear(wsp),
                                         .shift(shift));
 
-  //needs to shift on pos edge                                        
+  //needs to shift on neg edge                                        
   i2s_rcvr_shift_reg SHIFT_REGISTER(.clk(!clk),
                                     .n_rst(n_rst),
                                     .shift(shift),
                                     .data_in(serial_data),
                                     .data_out(parallel_data));
-  /*
-  i2s_rcvr_double_reg CHANNEL_REGISTERS(.clk(!clk),
-                                        .n_rst(n_rst),
-                                        .wsd(wsd),
-                                        .wsp(wsp),
-                                        .data_in(parallel_data),
-                                        .data_left(left_channel),
-                                        .data_right(right_channel));
-  */
 endmodule
