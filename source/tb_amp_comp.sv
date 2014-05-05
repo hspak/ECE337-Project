@@ -33,14 +33,16 @@ module tb_amp_comp;
 
     //initialize input vector
     reg [15:0] input_vec [INPUT_NUM-1:0];
-    assign input_vec[0]=16'hff00;
-    assign input_vec[1]=16'h7f00;
-    assign input_vec[2]=16'h88ff;
-    assign input_vec[3]=16'h38f0;
-    assign input_vec[4]=16'h210f;
-    assign input_vec[5]=16'hb100;
-    assign input_vec[6]=16'haa00;
+    assign input_vec[0]=16'h97e8; //97e8 c407
+    assign input_vec[1]=16'h8c40; //8c40 c010
+    assign input_vec[2]=16'h9e9d; //9e9d ae62
+    assign input_vec[3]=16'h8e4b; //8e4b a638
+    assign input_vec[4]=16'h89e5; //89e5 a74c
+    assign input_vec[5]=16'h842a; //842a acb0
+    assign input_vec[6]=16'h8e28; //8e28 b7f1
     assign input_vec[7]=16'h4c00;
+			
+    
 
     always begin
         tb_clk = 1'b1;
