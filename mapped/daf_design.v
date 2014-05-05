@@ -18410,7 +18410,7 @@ module i2s_trnmtr ( clk, n_rst, parallel_data, ws_flag, serial_data, sck );
 endmodule
 
 
-module daf_design ( clk, n_rst, ws_in, pot_vol, pot_amp_com, pot_amp_clp, 
+module daf_design_t ( clk, n_rst, ws_in, pot_vol, pot_amp_com, pot_amp_clp, 
         swch_mode_en, mem_clr, serial_data_in, serial_data_out, ws_out, sck );
   input [3:0] pot_vol;
   input [3:0] pot_amp_com;
@@ -18694,3 +18694,139 @@ module daf_design ( clk, n_rst, ws_in, pot_vol, pot_amp_com, pot_amp_clp,
   INVX2 U201 ( .A(n113), .Y(n200) );
 endmodule
 
+module  daf_design ( clk, n_rst, ws_in, pot_vol, pot_amp_com, pot_amp_clp, swch_mode_en, 
+	mem_clr, serial_data_in, serial_data_out, ws_out, sck );
+input   [3:0] pot_vol;
+input   [3:0] pot_amp_com;
+input   [3:0] pot_amp_clp;
+input   [3:0] swch_mode_en;
+input   clk, n_rst, ws_in, mem_clr, serial_data_in;
+output  serial_data_out, ws_out, sck;
+
+wire   [3:0] npot_vol;
+wire   [3:0] npot_amp_com;
+wire   [3:0] npot_amp_clp;
+wire   [3:0] nswch_mode_en;
+wire   nclk, nn_rst, nws_in, nmem_clr, nserial_data_in;
+wire  nserial_data_out, nws_out, nsck;
+
+PADVDD U1 (  );
+PADGND U2 (  );
+PADOUT U41 ( .DO(nsck), .YPAD(sck) );
+PADOUT U42 ( .DO(nserial_data_out), .YPAD(serial_data_out) );
+PADOUT U43 ( .DO(nws_out), .YPAD(ws_out) );
+PADINC U44 ( .DI(nclk), .YPAD(clk) );
+PADINC U45 ( .DI(nmem_clr), .YPAD(mem_clr) );
+PADINC U46 ( .DI(nn_rst), .YPAD(n_rst) );
+PADINC U47 ( .DI(npot_amp_clp[0]), .YPAD(pot_amp_clp[0]) );
+PADINC U48 ( .DI(npot_amp_clp[1]), .YPAD(pot_amp_clp[1]) );
+PADINC U49 ( .DI(npot_amp_clp[2]), .YPAD(pot_amp_clp[2]) );
+PADINC U50 ( .DI(npot_amp_clp[3]), .YPAD(pot_amp_clp[3]) );
+PADINC U51 ( .DI(npot_amp_com[0]), .YPAD(pot_amp_com[0]) );
+PADINC U52 ( .DI(npot_amp_com[1]), .YPAD(pot_amp_com[1]) );
+PADINC U53 ( .DI(npot_amp_com[2]), .YPAD(pot_amp_com[2]) );
+PADINC U54 ( .DI(npot_amp_com[3]), .YPAD(pot_amp_com[3]) );
+PADINC U55 ( .DI(npot_vol[0]), .YPAD(pot_vol[0]) );
+PADINC U56 ( .DI(npot_vol[1]), .YPAD(pot_vol[1]) );
+PADINC U57 ( .DI(npot_vol[2]), .YPAD(pot_vol[2]) );
+PADINC U58 ( .DI(npot_vol[3]), .YPAD(pot_vol[3]) );
+PADINC U59 ( .DI(nserial_data_in), .YPAD(serial_data_in) );
+PADINC U60 ( .DI(nswch_mode_en[0]), .YPAD(swch_mode_en[0]) );
+PADINC U61 ( .DI(nswch_mode_en[1]), .YPAD(swch_mode_en[1]) );
+PADINC U62 ( .DI(nswch_mode_en[2]), .YPAD(swch_mode_en[2]) );
+PADINC U63 ( .DI(nswch_mode_en[3]), .YPAD(swch_mode_en[3]) );
+PADINC U64 ( .DI(nws_in), .YPAD(ws_in) );
+
+endmodule
+/*
+module  daf_design ( clk, n_rst, ws_in, pot_vol, pot_amp_com, pot_amp_clp, swch_mode_en, 
+	mem_clr, serial_data_in, serial_data_out, ws_out, sck );
+
+input   [3:0] pot_vol;
+input   [3:0] pot_amp_com;
+input   [3:0] pot_amp_clp;
+input   [3:0] swch_mode_en;
+input   clk, n_rst, ws_in, mem_clr, serial_data_in;
+output  serial_data_out, ws_out, sck, _data(parallel_buf_vol) ), _data(parallel_vol[31:16]) );
+output  _data(parallel_vol[15:0]) );
+output  _data(parallel_buf_flang) ), _data(parallel_flang), .sram_rw(sram_rw) ), _data(parallel_buf_ampclp) ), _data(parallel_buf_trns) );
+wire	nclk, nn_rst, nws_in, nmem_clr, nserial_data_in, nserial_data_out, nws_out, nsck, n_data(parallel_buf_vol) ), n_data(parallel_buf_flang) ), n_data(parallel_flang), n.sram_rw(sram_rw) ), n_data(parallel_buf_ampclp) ), n_data(parallel_buf_trns) );
+
+wire	[3:0] npot_vol;
+wire	[3:0] npot_amp_com;
+wire	[3:0] npot_amp_clp;
+wire	[3:0] nswch_mode_en;
+wire	[31:16] n) );
+wire	[15:0] n) );
+        daf_design_t I0 ( .clk(nclk), .n_rst(nn_rst), .ws_in(nws_in), .pot_vol(npot_vol), 
+	.pot_amp_com(npot_amp_com), .pot_amp_clp(npot_amp_clp), .swch_mode_en(nswch_mode_en), 
+	.mem_clr(nmem_clr), .serial_data_in(nserial_data_in), .serial_data_out(nserial_data_out), 
+	.ws_out(nws_out), .sck(nsck) );
+
+PADVDD U1 (  );
+PADGND U2 (  );
+PADOUT U3 ( .DO(n) )[0]), .YPAD() )[0]) );
+PADOUT U4 ( .DO(n) )[10]), .YPAD() )[10]) );
+PADOUT U5 ( .DO(n) )[11]), .YPAD() )[11]) );
+PADOUT U6 ( .DO(n) )[12]), .YPAD() )[12]) );
+PADOUT U7 ( .DO(n) )[13]), .YPAD() )[13]) );
+PADOUT U8 ( .DO(n) )[14]), .YPAD() )[14]) );
+PADOUT U9 ( .DO(n) )[15]), .YPAD() )[15]) );
+PADOUT U10 ( .DO(n) )[16]), .YPAD() )[16]) );
+PADOUT U11 ( .DO(n) )[17]), .YPAD() )[17]) );
+PADOUT U12 ( .DO(n) )[18]), .YPAD() )[18]) );
+PADOUT U13 ( .DO(n) )[19]), .YPAD() )[19]) );
+PADOUT U14 ( .DO(n) )[1]), .YPAD() )[1]) );
+PADOUT U15 ( .DO(n) )[20]), .YPAD() )[20]) );
+PADOUT U16 ( .DO(n) )[21]), .YPAD() )[21]) );
+PADOUT U17 ( .DO(n) )[22]), .YPAD() )[22]) );
+PADOUT U18 ( .DO(n) )[23]), .YPAD() )[23]) );
+PADOUT U19 ( .DO(n) )[24]), .YPAD() )[24]) );
+PADOUT U20 ( .DO(n) )[25]), .YPAD() )[25]) );
+PADOUT U21 ( .DO(n) )[26]), .YPAD() )[26]) );
+PADOUT U22 ( .DO(n) )[27]), .YPAD() )[27]) );
+PADOUT U23 ( .DO(n) )[28]), .YPAD() )[28]) );
+PADOUT U24 ( .DO(n) )[29]), .YPAD() )[29]) );
+PADOUT U25 ( .DO(n) )[2]), .YPAD() )[2]) );
+PADOUT U26 ( .DO(n) )[30]), .YPAD() )[30]) );
+PADOUT U27 ( .DO(n) )[31]), .YPAD() )[31]) );
+PADOUT U28 ( .DO(n) )[3]), .YPAD() )[3]) );
+PADOUT U29 ( .DO(n) )[4]), .YPAD() )[4]) );
+PADOUT U30 ( .DO(n) )[5]), .YPAD() )[5]) );
+PADOUT U31 ( .DO(n) )[6]), .YPAD() )[6]) );
+PADOUT U32 ( .DO(n) )[7]), .YPAD() )[7]) );
+PADOUT U33 ( .DO(n) )[8]), .YPAD() )[8]) );
+PADOUT U34 ( .DO(n) )[9]), .YPAD() )[9]) );
+PADOUT U35 ( .DO(n.sram_rw(sram_rw) )), .YPAD(.sram_rw(sram_rw) )) );
+PADOUT U36 ( .DO(n_data(parallel_buf_ampclp) )), .YPAD(_data(parallel_buf_ampclp) )) );
+PADOUT U37 ( .DO(n_data(parallel_buf_flang) )), .YPAD(_data(parallel_buf_flang) )) );
+PADOUT U38 ( .DO(n_data(parallel_buf_trns) )), .YPAD(_data(parallel_buf_trns) )) );
+PADOUT U39 ( .DO(n_data(parallel_buf_vol) )), .YPAD(_data(parallel_buf_vol) )) );
+PADOUT U40 ( .DO(n_data(parallel_flang)), .YPAD(_data(parallel_flang)) );
+PADOUT U41 ( .DO(nsck), .YPAD(sck) );
+PADOUT U42 ( .DO(nserial_data_out), .YPAD(serial_data_out) );
+PADOUT U43 ( .DO(nws_out), .YPAD(ws_out) );
+PADINC U44 ( .DI(nclk), .YPAD(clk) );
+PADINC U45 ( .DI(nmem_clr), .YPAD(mem_clr) );
+PADINC U46 ( .DI(nn_rst), .YPAD(n_rst) );
+PADINC U47 ( .DI(npot_amp_clp[0]), .YPAD(pot_amp_clp[0]) );
+PADINC U48 ( .DI(npot_amp_clp[1]), .YPAD(pot_amp_clp[1]) );
+PADINC U49 ( .DI(npot_amp_clp[2]), .YPAD(pot_amp_clp[2]) );
+PADINC U50 ( .DI(npot_amp_clp[3]), .YPAD(pot_amp_clp[3]) );
+PADINC U51 ( .DI(npot_amp_com[0]), .YPAD(pot_amp_com[0]) );
+PADINC U52 ( .DI(npot_amp_com[1]), .YPAD(pot_amp_com[1]) );
+PADINC U53 ( .DI(npot_amp_com[2]), .YPAD(pot_amp_com[2]) );
+PADINC U54 ( .DI(npot_amp_com[3]), .YPAD(pot_amp_com[3]) );
+PADINC U55 ( .DI(npot_vol[0]), .YPAD(pot_vol[0]) );
+PADINC U56 ( .DI(npot_vol[1]), .YPAD(pot_vol[1]) );
+PADINC U57 ( .DI(npot_vol[2]), .YPAD(pot_vol[2]) );
+PADINC U58 ( .DI(npot_vol[3]), .YPAD(pot_vol[3]) );
+PADINC U59 ( .DI(nserial_data_in), .YPAD(serial_data_in) );
+PADINC U60 ( .DI(nswch_mode_en[0]), .YPAD(swch_mode_en[0]) );
+PADINC U61 ( .DI(nswch_mode_en[1]), .YPAD(swch_mode_en[1]) );
+PADINC U62 ( .DI(nswch_mode_en[2]), .YPAD(swch_mode_en[2]) );
+PADINC U63 ( .DI(nswch_mode_en[3]), .YPAD(swch_mode_en[3]) );
+PADINC U64 ( .DI(nws_in), .YPAD(ws_in) );
+
+endmodule
+*/
