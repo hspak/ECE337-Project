@@ -7,7 +7,7 @@
 #***************************************************
 # Clock Constraints	
 #***************************************************
-create_clock  -period 708.0000000 -waveform { 0.0000000 354.0000000}\
+create_clock  -period 2.0000000 -waveform { 0.0000000 1.0000000}\
    [get_ports {clk}]
 
 
@@ -17,37 +17,53 @@ create_clock  -period 708.0000000 -waveform { 0.0000000 354.0000000}\
 set_input_delay -clock clk 1.0000 \
    [get_ports {n_rst}] 
 set_input_delay -clock clk 1.0000 \
-   [get_ports {transmit}] 
+   [get_ports {ws_in}] 
 set_input_delay -clock clk 1.0000 \
-   [get_ports {write_enable}] 
+   [get_ports {pot_vol[3]}] 
 set_input_delay -clock clk 1.0000 \
-   [get_ports {write_data[7]}] 
+   [get_ports {pot_vol[2]}] 
 set_input_delay -clock clk 1.0000 \
-   [get_ports {write_data[6]}] 
+   [get_ports {pot_vol[1]}]
 set_input_delay -clock clk 1.0000 \
-   [get_ports {write_data[5]}] 
+   [get_ports {pot_vol[0]}]
 set_input_delay -clock clk 1.0000 \
-   [get_ports {write_data[4]}]
+   [get_ports {pot_amp_com[3]}] 
 set_input_delay -clock clk 1.0000 \
-   [get_ports {write_data[3]}]
+   [get_ports {pot_amp_com[2]}] 
 set_input_delay -clock clk 1.0000 \
-   [get_ports {write_data[2]}]
+   [get_ports {pot_amp_com[1]}]
 set_input_delay -clock clk 1.0000 \
-   [get_ports {write_data[1]}]
+   [get_ports {pot_amp_com[0]}]
 set_input_delay -clock clk 1.0000 \
-   [get_ports {write_data[0]}]	 
+   [get_ports {pot_amp_clp[3]}] 
+set_input_delay -clock clk 1.0000 \
+   [get_ports {pot_amp_clp[2]}] 
+set_input_delay -clock clk 1.0000 \
+   [get_ports {pot_amp_clp[1]}]
+set_input_delay -clock clk 1.0000 \
+   [get_ports {pot_amp_clp[0]}]
+set_input_delay -clock clk 1.0000 \
+   [get_ports {swch_mode_en[3]}] 
+set_input_delay -clock clk 1.0000 \
+   [get_ports {swch_mode_en[2]}] 
+set_input_delay -clock clk 1.0000 \
+   [get_ports {swch_mode_en[1]}]
+set_input_delay -clock clk 1.0000 \
+   [get_ports {swch_mode_en[0]}]
+set_input_delay -clock clk 1.0000 \
+   [get_ports {mem_clr}] 
+set_input_delay -clock clk 1.0000 \
+   [get_ports {serial_data_in}] 
 
 #***************************************************
 # Output Pin Constraints
 #***************************************************
 set_output_delay -clock clk 1.0000 \
-   [get_ports {fifo_full}] 
+   [get_ports {serial_data_out}] 
 set_output_delay -clock clk 1.0000 \
-   [get_ports {fifo_empty}] 
+   [get_ports {ws_out}] 
 set_output_delay -clock clk 1.0000 \
-   [get_ports {d_plus}] 
-set_output_delay -clock clk 1.0000 \
-   [get_ports {d_minus}] 
+   [get_ports {sck}] 
 
 #***************************************************
 # Pin Driving Cells (Needed only for Inputs)
@@ -57,22 +73,40 @@ set_driving_cell -lib_cell INVX8\
 set_driving_cell -lib_cell INVX8\
    [get_ports {n_rst}] 
 set_driving_cell -lib_cell INVX8\
-   [get_ports {transmit}] 
+   [get_ports {ws_in}] 
 set_driving_cell -lib_cell INVX8\
-   [get_ports {write_enable}] 
+   [get_ports {pot_vol[3]}] 
 set_driving_cell -lib_cell INVX8\
-   [get_ports {write_data[7]}]
+   [get_ports {pot_vol[2]}]
 set_driving_cell -lib_cell INVX8\
-   [get_ports {write_data[6]}]
+   [get_ports {pot_vol[1]}]
 set_driving_cell -lib_cell INVX8\
-   [get_ports {write_data[5]}]
+   [get_ports {pot_vol[0]}]
 set_driving_cell -lib_cell INVX8\
-   [get_ports {write_data[4]}]
+   [get_ports {pot_amp_com[3]}]
 set_driving_cell -lib_cell INVX8\
-   [get_ports {write_data[3]}]
+   [get_ports {pot_amp_com[2]}]
 set_driving_cell -lib_cell INVX8\
-   [get_ports {write_data[2]}]
+   [get_ports {pot_amp_com[1]}]
 set_driving_cell -lib_cell INVX8\
-   [get_ports {write_data[1]}]
+   [get_ports {pot_amp_com[0]}]	 
 set_driving_cell -lib_cell INVX8\
-   [get_ports {write_data[0]}]	 
+   [get_ports {pot_amp_clp[3]}]
+set_driving_cell -lib_cell INVX8\
+   [get_ports {pot_amp_clp[2]}]
+set_driving_cell -lib_cell INVX8\
+   [get_ports {pot_amp_clp[1]}]
+set_driving_cell -lib_cell INVX8\
+   [get_ports {pot_amp_clp[0]}]	 
+set_driving_cell -lib_cell INVX8\
+   [get_ports {swch_mode_en[3]}]
+set_driving_cell -lib_cell INVX8\
+   [get_ports {swch_mode_en[2]}]
+set_driving_cell -lib_cell INVX8\
+   [get_ports {swch_mode_en[1]}]
+set_driving_cell -lib_cell INVX8\
+   [get_ports {swch_mode_en[0]}]
+set_driving_cell -lib_cell INVX8\
+   [get_ports {mem_clr}]
+set_driving_cell -lib_cell INVX8\
+   [get_ports {serial_data_in}]
